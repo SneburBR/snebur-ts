@@ -1,0 +1,10 @@
+{
+  "name": "@snebur/ui",
+  "version": "0.0.0-LOCAL",
+  "description": "",
+  "author": "Rubens Cordeiro",
+  "peerDependencies": {
+    "@snebur/core": "0.0.0-LOCAL"
+  },
+  "license": "Apache-2.0"
+}

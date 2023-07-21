@@ -1,0 +1,11 @@
+{
+  "name": "@snebur/ui-demo",
+  "version": "0.0.0-LOCAL",
+  "description": "",
+  "peerDependencies": {
+    "@snebur/core": "0.0.0-LOCAL",
+    "@snebur/ui": "0.0.0-LOCAL"
+  },
+  "author": "Rubens Cordeiro",
+  "license": "Apache-2.0"
+}

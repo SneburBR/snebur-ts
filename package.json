@@ -1,0 +1,26 @@
+{
+  "name": "snebur",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd ./packages/core && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts --external-inlines",
+    "test": "vitest"
+  },
+  "author": "Rubes Cordeiro",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "dts-bundle-generator": "^8.0.1",
+    "eslint": "^8.45.0",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.6",
+    "vitest": "^0.33.0"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/ui",
+    "packages/ui-demo"
+  ]
+}

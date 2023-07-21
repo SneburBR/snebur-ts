@@ -1,0 +1,13 @@
+#folder
+node_modules/
+build
+logs
+
+
+#files
+*.log
+*.log.*
+*.js
+*.map
+*.d.ts
+```
