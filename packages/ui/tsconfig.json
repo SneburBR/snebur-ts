@@ -14,7 +14,10 @@
         "stripInternal": true,
         "noImplicitAny": true,
         "forceConsistentCasingInFileNames": true,
-         
+        "lib": [
+            "DOM",
+            "ES2020"
+        ]
     },
     "include": ["src"]
 }
