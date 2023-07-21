@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "target": "es2020",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "sourceMap": true,
+        "allowJs": true,
+        "removeComments": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "stripInternal": true,
+        "noImplicitAny": true,
+        "forceConsistentCasingInFileNames": true,
+         
+    },
+    "include": ["src"]
+}
