@@ -1,9 +1,13 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { hideElement, showElement } from "@snebur/ui/src/util/element";
+import { getDocument } from "../test-util";
+
 
 describe("element utility functions", () => {
-  let element: HTMLElement;
 
+  const document = getDocument();
+  let element: HTMLElement;
+  
   beforeEach(() => {
     element = document.createElement("div");
   });
@@ -13,6 +17,7 @@ describe("element utility functions", () => {
       hideElement(element);
       expect(element.style.display).toBe("none");
     });
+    
 
     it("should not throw an error if the element is null", () => {
       expect(() => hideElement(null)).not.toThrow();

@@ -12,7 +12,7 @@ export default defineConfig({
             fileName: "index",
         },
         commonjsOptions: {
-            ignore: [...builtinModules, "ws"],
+            ignore: [...builtinModules ],
         },
         sourcemap: true,
         outDir: "build",
@@ -24,6 +24,6 @@ export default defineConfig({
         threads: false,
         setupFiles: "tests/setup.ts",
         logHeapUsage: true,
-    },
+    } 
 });
 
