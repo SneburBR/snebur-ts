@@ -1,4 +1,3 @@
-
 import {
   base64ToArrayBuffer, base64ToBlob, changeExtension, getBase64FromUrlAsync,
   getExtension, getFileName, getFileNameWithoutExtension, normalizeExtension, normalizeFileName, saveFile
@@ -29,7 +28,7 @@ describe("File Utils", () => {
       const expected = new Blob([new Uint8Array([72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100])], { type: mimeType });
       expect(base64ToBlob(base64, mimeType)).toEqual(expected);
     });
-    
+
 
     it("should throw an error for an invalid base64 string", () => {
       const base64 = "not a valid base64 string";
