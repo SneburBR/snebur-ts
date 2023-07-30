@@ -56,13 +56,27 @@
         "no-undef": "off", // ts(2304)
         "no-unreachable": "error", // ts(7027)
         "no-unsafe-negation": "error", // ts(2365) & ts(2360) & ts(2358)
-        "no-var": "error", // ts transpiles let/const to var, so no need for vars any more
+        "no-unused-vars": [
+          "warn",
+          {
+            "vars": "all",
+            "args": "none",
+            "ignoreRestSiblings": false
+          }
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "warn", // or "error"
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+          }
+        ], // ts transpiles let/const to var, so no need for vars any more
         "prefer-const": "warn", // ts provides better types with const
         "prefer-rest-params": "error", // ts provides better types with rest args over arguments
         "prefer-spread": "error", // ts transpiles spread to apply, so no need for manual apply
         "valid-typeof": "error", // ts(2367)
-        "camelcase": "error",
-        "no-unused-vars": "warn"
+        "camelcase": "error"
       }
     }
   ]
