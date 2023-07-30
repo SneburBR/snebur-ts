@@ -24,5 +24,9 @@
     "packages/core",
     "packages/ui",
     "packages/ui-demo"
-  ]
+  ],
+  "dependencies": {
+    "@types/file-saver": "^2.0.5",
+    "file-saver": "^2.0.5"
+  }
 }
