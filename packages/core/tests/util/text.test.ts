@@ -1,6 +1,6 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
-    countWords
+    countWords, countOccurrences
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -72,6 +72,60 @@ describe("TextUtil", () => {
         it("should return 3 for three words", () => {
             expect(countWords("hello, hello world!")).toBe(3);
             expect(countWords("  hello   world !  ")).toBe(3);
+        });
+    });
+
+    describe("countOccurrences", () => {
+
+        it("should return 0 when the word is not found", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "cat";
+            const result = countOccurrences(text, word);
+            expect(result).toEqual(0);
+            expect(countOccurrences(text, null)).toEqual(0);
+            expect(countOccurrences(text, "")).toEqual(0);
+            expect(countOccurrences(null, word)).toEqual(0);
+            expect(countOccurrences("", word)).toEqual(0);
+            expect(countOccurrences(null, null)).toEqual(0);
+            expect(countOccurrences(undefined, undefined)).toEqual(0);
+            expect(countOccurrences("", "")).toEqual(0);
+        });
+
+        it("should return the correct number of occurrences when the word is found", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "o";
+            const result = countOccurrences(text, word);
+            expect(result).toEqual(4);
+        });
+
+        it("should return the correct number of occurrences when the word is found multiple times in a row", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "fox";
+            const result = countOccurrences(text, word);
+            expect(result).toEqual(1);
+        });
+
+        it("should return the correct number of occurrences when the word is found at the beginning of the text", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "The";
+            const result = countOccurrences(text, word);
+            const resultIgnoreCase = countOccurrences(text, word, true);
+            expect(result).toEqual(1);
+            expect(resultIgnoreCase).toEqual(2);
+        });
+
+        it("should return the correct number of occurrences when the word is found at the end of the text", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "dog";
+            const result = countOccurrences(text, word);
+            expect(result).toEqual(1);
+        });
+
+        it("should return the correct number of occurrences when the word is found in the middle of the text", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "brown";
+            const result = countOccurrences(text, word);
+            expect(result).toEqual(1);
         });
     });
 

@@ -33,6 +33,24 @@ export function countWords(text: string): number {
 }
 
 /**
+ * Counts the number of occurrences of a word in a given text.
+ * @param text The text to search for occurrences of the word.
+ * @param word The word to count occurrences of in the text.
+ * @returns The number of occurrences of the word in the text.
+ */
+export function countOccurrences(text: string, word: string, isIgnoreCase: boolean = false): number {
+
+    if (isNullOrWhiteSpace(text)) return 0;
+    if (isNullOrWhiteSpace(word)) return 0;
+
+    if (isIgnoreCase) {
+        text = text.toLowerCase();
+        word = word.toLowerCase();
+    }
+    return text.split(word).length - 1;
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
