@@ -22,6 +22,17 @@ export function concat(...parts: string[]): string {
 }
 
 /**
+ * Counts the number of words in a given text.
+ * @param text The text to count words from.
+ * @returns The number of words in the text.
+ */
+export function countWords(text: string): number {
+    
+    if (isNullOrWhiteSpace(text)) return 0;
+    return text.trim().split(/\s+/).length;
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

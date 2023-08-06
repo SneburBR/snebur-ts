@@ -1,4 +1,7 @@
-import { concat, specialConcat, isNullOrWhiteSpace, countLines } from "../../src/util/text";
+import {
+    concat, specialConcat, isNullOrWhiteSpace, countLines,
+    countWords
+} from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
 
@@ -48,6 +51,31 @@ describe("TextUtil", () => {
         });
     });
 
+    describe("countWords", () => {
+
+        it("should return 0 for empty string", () => {
+            expect(countWords("")).toBe(0);
+            expect(countWords(null)).toBe(0);
+            expect(countWords(undefined)).toBe(0);
+        });
+
+        it("should return 1 for single word", () => {
+            expect(countWords(" hello ")).toBe(1);
+            expect(countWords("hello")).toBe(1);
+        });
+
+        it("should return 2 for two words", () => {
+            expect(countWords("hello world!")).toBe(2);
+            expect(countWords("  hello   world  ")).toBe(2);
+        });
+
+        it("should return 3 for three words", () => {
+            expect(countWords("hello, hello world!")).toBe(3);
+            expect(countWords("  hello   world !  ")).toBe(3);
+        });
+    });
+
+
     describe("isNullOrWhiteSpace", () => {
 
         it("should return true for null or undefined", () => {
@@ -60,7 +88,7 @@ describe("TextUtil", () => {
         });
 
         it("should return true for whitespace string", () => {
-            
+
             expect(isNullOrWhiteSpace(" ")).toBe(true);
             expect(isNullOrWhiteSpace("  ")).toBe(true);
             expect(isNullOrWhiteSpace(" \t ")).toBe(true);
@@ -85,7 +113,7 @@ describe("TextUtil", () => {
             expect(specialConcat([null])).toEqual("");
             expect(specialConcat([null, null])).toEqual("");
             expect(specialConcat([" "])).toEqual(" ");
-            expect(specialConcat([" ", " ", ], ",")).toEqual(" , ");
+            expect(specialConcat([" ", " ",], ",")).toEqual(" , ");
         });
 
         it("should concat single string", () => {
