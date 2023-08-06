@@ -1,4 +1,4 @@
-import { concat, specialConcat } from "../../src/util/text";
+import { concat, specialConcat, isNullOrWhiteSpace } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
 
@@ -49,6 +49,34 @@ describe("TextUtil", () => {
             expect(specialConcat(["a", "b"], ", ", " and ")).toEqual("a and b");
             expect(specialConcat(["a", "b", "c"], ", ", " and ")).toEqual("a, b and c");
         });
+    });
+
+    describe("isNullOrWhiteSpace", () => {
+
+        it("should return true for null or undefined", () => {
+            expect(isNullOrWhiteSpace(null)).toBe(true);
+            expect(isNullOrWhiteSpace(undefined)).toBe(true);
+        });
+
+        it("should return true for empty string", () => {
+            expect(isNullOrWhiteSpace("")).toBe(true);
+        });
+
+        it("should return true for whitespace string", () => {
+            
+            expect(isNullOrWhiteSpace(" ")).toBe(true);
+            expect(isNullOrWhiteSpace("  ")).toBe(true);
+            expect(isNullOrWhiteSpace(" \t ")).toBe(true);
+            expect(isNullOrWhiteSpace(" \t \n ")).toBe(true);
+        });
+
+        it("should return false for non-whitespace string", () => {
+            expect(isNullOrWhiteSpace("hello")).toBe(false);
+            expect(isNullOrWhiteSpace(" hello")).toBe(false);
+            expect(isNullOrWhiteSpace("hello ")).toBe(false);
+            expect(isNullOrWhiteSpace(" hello ")).toBe(false);
+        });
+
     });
 
 });

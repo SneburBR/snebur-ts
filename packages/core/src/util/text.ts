@@ -29,3 +29,13 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
     }
     return parts.join(separator);
 }
+
+/**
+ * Determines whether a given string is null, undefined, or consists only of whitespace characters.
+ * @param text The string to check.
+ * @returns True if the string is null, undefined, or consists only of whitespace characters; otherwise, false.
+ */
+export function isNullOrWhiteSpace(text: string): boolean {
+    return text === null || text === undefined || text.trim() === "";
+}
+
