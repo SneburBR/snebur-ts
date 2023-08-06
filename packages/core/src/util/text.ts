@@ -73,6 +73,31 @@ export function getWords(text: string): string[] {
 }
 
 /**
+ * Returns an array of substrings in the given `text` that match the specified `word`.
+ * @param text The text to search for occurrences of the `word`.
+ * @param word The word to search for in the `text`.
+ * @returns An array of substrings in the `text` that match the specified `word`.
+ */
+export function getOccurrences(text: string, word: string): string[] {
+
+    if (isNullOrWhiteSpace(text)) return [];
+    if (isNullOrWhiteSpace(word)) return [];
+
+    const occurrences: string[] = [];
+    let index = 0;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        index = text.indexOf(word, index);
+        if (index === -1) break;
+        occurrences.push(text.substr(index, word.length));
+        //occurrences.push(text.slice(index, index + word.length));
+        index += word.length;
+    }
+    return occurrences;
+    
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

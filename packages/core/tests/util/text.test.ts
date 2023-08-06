@@ -1,6 +1,6 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
-    countWords, countOccurrences, getLines, getWords
+    countWords, countOccurrences, getLines, getWords, getOccurrences
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -231,6 +231,37 @@ describe("TextUtil", () => {
             const text = "hello\r\nworld!";
             const result = getWords(text);
             expect(result).toEqual(["hello", "world!"]);
+        });
+    });
+
+    describe("getOccurrences", () => {
+
+        it("should return empty array when the word is not found", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "cat";
+            const result = getOccurrences(text, word);
+            expect(result).toEqual([]);
+            expect(getOccurrences(text, null)).toEqual([]);
+            expect(getOccurrences(text, "")).toEqual([]);
+            expect(getOccurrences(null, word)).toEqual([]);
+            expect(getOccurrences("", word)).toEqual([]);
+            expect(getOccurrences(null, null)).toEqual([]);
+            expect(getOccurrences(undefined, undefined)).toEqual([]);
+            expect(getOccurrences("", "")).toEqual([]);
+        });
+
+        it("should return the correct number of occurrences when the word is found", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "o";
+            const result = getOccurrences(text, word);
+            expect(result).toEqual(["o", "o", "o", "o"]);
+        });
+
+        it("should return the correct number of occurrences when the word is found multiple times in a row", () => {
+            const text = "The quick brown fox jumps over the lazy dog";
+            const word = "fox";
+            const result = getOccurrences(text, word);
+            expect(result).toEqual(["fox"]);
         });
     });
 });
