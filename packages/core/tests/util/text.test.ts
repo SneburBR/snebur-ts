@@ -1,7 +1,7 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
-    getOnlyNumbers, SpecialCharsOptions
+    getOnlyNumbers, getOnlyLetters, SpecialCharsOptions
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -289,9 +289,9 @@ describe("TextUtil", () => {
             expect(getOnlyNumbers(text, SpecialCharsOptions.Punctuations)).toEqual(",123,0012351.000,00");
         });
 
-         it("should return string with only numbers for string with numbers and operators", () => {
+        it("should return string with only numbers for string with numbers and operators", () => {
             expect(getOnlyNumbers(text, SpecialCharsOptions.Operators)).toEqual("+12300*-123+5%100000");
-         });
+        });
 
         it("should return string with only numbers for string with numbers and brackets", () => {
             expect(getOnlyNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{}[]12300123(5)100000");
@@ -325,7 +325,68 @@ describe("TextUtil", () => {
 
             expect(getOnlyNumbers(text, options)).toEqual("{},   [] + 123,00 * -123 + (5%)  1.000,00");
         });
- 
+
     });
  
+    describe("getOnlyLetters", () => {
+
+        const text = "{\"'Hello'\"}, <hello>ºª & [World] + 123,00 * -123° + (5%) R$ 1.000,00";
+        it("should return empty string for empty string", () => {
+            expect(getOnlyLetters("")).toEqual("");
+            expect(getOnlyLetters(null)).toEqual("");
+        });
+
+        it("should return empty string for string with no letters", () => {
+            expect(getOnlyLetters("123")).toEqual("");
+        });
+
+        it("should return string with only letters for string with letters", () => {
+            expect(getOnlyLetters(text)).toEqual("HellohelloWorldR");
+        });
+
+        it("should return string with only letters for string with letters and white spaces", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.WhiteSpaces)).toEqual("Hello hello  World       R ");
+        });
+
+        it("should return string with only letters for string with letters and punctuations", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.Punctuations)).toEqual("Hello,helloWorld,R.,");
+        });
+
+        it("should return string with only letters for string with letters and operators", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.Operators)).toEqual("HellohelloWorld+*-+%R");
+        });
+
+        it("should return string with only letters for string with letters and brackets", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}hello[World]()R");
+        });
+
+        it("should return string with only letters for string with letters and symbols", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.Symbols)).toEqual("Hellohello&WorldR$");
+        });
+
+        it("should return string with only letters for string with letters and quotes", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.Quotes)).toEqual(`"'Hello'"helloWorldR`);
+        });
+
+        it("should return string with only letters for string with letters and special symbols", () => {
+            expect(getOnlyLetters(text, SpecialCharsOptions.SpecialSymbols)).toEqual("HellohelloºªWorld°R");
+        });
+
+        it("should return string with only letters for string with letters, punctuations and spaces", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces;
+            expect(getOnlyLetters(text, options)).toEqual("Hello, hello  World  ,     R .,");
+        });
+
+        it("should return string with only letters for string with letters, punctuations, spaces, and operators", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Operators;
+            expect(getOnlyLetters(text, options)).toEqual("Hello, hello  World + , * - + % R .,");
+        });
+
+        it("should return string with only letters for string with letters, punctuations, spaces, operators, and brackets", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces |
+                SpecialCharsOptions.Operators | SpecialCharsOptions.Brackets;
+
+            expect(getOnlyLetters(text, options)).toEqual("{Hello}, hello  [World] + , * - + (%) R .,");
+        });
+    });
 });

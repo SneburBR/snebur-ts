@@ -113,6 +113,22 @@ export function getOnlyNumbers(value: string, acceptOptions: SpecialCharsOptions
 }
 
 /**
+ * Returns a new string containing only the letters from the input string.
+ * 
+ * @param value - The input string to extract letters from.
+ * @param acceptOptions - An optional parameter to specify which special characters to allow in the output string.
+ * @param replaceValue - An optional parameter to specify a replacement string for the removed characters.
+ * @returns A new string containing only the letters from the input string.
+ */
+export function getOnlyLetters(value: string, acceptOptions: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
+
+    if (isNullOrWhiteSpace(value)) return "";
+
+    const regex = getRegexInternal(RegexOnlyInternal.Letters, acceptOptions);
+    return value.replace(regex, replaceValue);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
