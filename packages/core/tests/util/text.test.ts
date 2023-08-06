@@ -1,4 +1,4 @@
-import { concat, specialConcat, isNullOrWhiteSpace } from "../../src/util/text";
+import { concat, specialConcat, isNullOrWhiteSpace, countLines } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
 
@@ -26,28 +26,25 @@ describe("TextUtil", () => {
         });
     });
 
-    describe("specialConcat", () => {
+    describe("countLines", () => {
 
-        it("should concat empty string", () => {
-            expect(specialConcat([])).toEqual("");
-            expect(specialConcat([""])).toEqual("");
-            expect(specialConcat(["", ""])).toEqual("");
-            expect(specialConcat([null])).toEqual("");
-            expect(specialConcat([null, null])).toEqual("");
-            expect(specialConcat([" "])).toEqual(" ");
-            expect(specialConcat([" ", " ", ], ",")).toEqual(" , ");
+        it("should return 1 for a single-line string", () => {
+            const text = "Hello, world!";
+            const result = countLines(text);
+            expect(result).toEqual(1);
         });
 
-        it("should concat single string", () => {
-            const result = specialConcat(["hello"]);
-            expect(result).toEqual("hello");
+        it("should return the correct number of lines for a multi-line string", () => {
+            const text = "Hello,\nworld!";
+            const result = countLines(text);
+            expect(result).toEqual(2);
         });
 
-        it("should concat multiple strings", () => {
-            expect(specialConcat(["hello", " ", "world"])).toEqual("hello world");
-            expect(specialConcat(["hello", "world"], ", ")).toEqual("hello, world");
-            expect(specialConcat(["a", "b"], ", ", " and ")).toEqual("a and b");
-            expect(specialConcat(["a", "b", "c"], ", ", " and ")).toEqual("a, b and c");
+        it("should return 0 for an empty string", () => {
+            const text = "";
+            const result = countLines(text);
+            expect(result).toEqual(0);
+            expect(countLines(null)).toEqual(0);
         });
     });
 
@@ -79,4 +76,28 @@ describe("TextUtil", () => {
 
     });
 
+    describe("specialConcat", () => {
+
+        it("should concat empty string", () => {
+            expect(specialConcat([])).toEqual("");
+            expect(specialConcat([""])).toEqual("");
+            expect(specialConcat(["", ""])).toEqual("");
+            expect(specialConcat([null])).toEqual("");
+            expect(specialConcat([null, null])).toEqual("");
+            expect(specialConcat([" "])).toEqual(" ");
+            expect(specialConcat([" ", " ", ], ",")).toEqual(" , ");
+        });
+
+        it("should concat single string", () => {
+            const result = specialConcat(["hello"]);
+            expect(result).toEqual("hello");
+        });
+
+        it("should concat multiple strings", () => {
+            expect(specialConcat(["hello", " ", "world"])).toEqual("hello world");
+            expect(specialConcat(["hello", "world"], ", ")).toEqual("hello, world");
+            expect(specialConcat(["a", "b"], ", ", " and ")).toEqual("a and b");
+            expect(specialConcat(["a", "b", "c"], ", ", " and ")).toEqual("a, b and c");
+        });
+    });
 });

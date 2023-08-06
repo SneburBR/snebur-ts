@@ -9,6 +9,18 @@ export function concat(...parts: string[]): string {
     return parts.join("");
 }
 
+ /**
+ * Counts the number of lines in a given string of text.
+ * 
+ * @param text - The text to count lines in.
+ * @returns The number of lines in the text.
+ */
+ export function countLines(text: string): number {
+
+    if (isNullOrWhiteSpace(text)) return 0;
+    return text.split(/\r\n|\r|\n/).length;
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
