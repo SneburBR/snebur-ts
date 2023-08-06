@@ -96,6 +96,21 @@ export function getOccurrences(text: string, word: string): string[] {
     return occurrences;
     
 }
+ 
+/**
+ * Returns a string containing only the numbers from the input string.
+ * @param value - The input string to extract numbers from.
+ * @param acceptOptions - Optional parameter to specify which special characters to accept in the input string.
+ * @param replaceValue - Optional parameter to specify a replacement value for the extracted numbers.
+ * @returns A string containing only the numbers from the input string.
+ */
+export function getOnlyNumbers(value: string, acceptOptions: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
+
+    if (isNullOrWhiteSpace(value)) return "";
+ 
+    const regex = getRegexInternal(RegexOnlyInternal.Numbers, acceptOptions);
+    return value.replace(regex, replaceValue);
+}
 
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
@@ -125,5 +140,48 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
  */
 export function isNullOrWhiteSpace(text: string): boolean {
     return text === null || text === undefined || text.trim() === "";
+}
+
+
+
+/* eslint-disable no-unused-vars */
+const punctuation = ".,;:!?";
+const operators = `\\+\\-\\*\\/\\%=`;
+const brackets = "\\(\\)\\[\\]\\{\\}";
+const symbols = "~^\\/|@#$&";
+const quotes = "\"'`";
+const specialSymbols = "°ºª§";
+
+/**
+ * Options for including special characters in a regular expression pattern.
+ */
+export enum SpecialCharsOptions {
+    None = 0,
+    WhiteSpaces = 1,
+    Punctuations = 2,
+    Operators = 4,
+    Symbols = 8,
+    Brackets = 16,
+    Quotes = 32,
+    SpecialSymbols = 64,
+}
+
+function getRegexInternal(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+    let regex = only + "";
+    if (options & SpecialCharsOptions.WhiteSpaces) regex += "\\s";
+    if (options & SpecialCharsOptions.Punctuations) regex += punctuation;
+    if (options & SpecialCharsOptions.Operators) regex += operators;
+    if (options & SpecialCharsOptions.Brackets) regex += brackets;
+    if (options & SpecialCharsOptions.Symbols) regex += symbols;
+    if (options & SpecialCharsOptions.Quotes) regex += quotes;
+    if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
+    return new RegExp(`[^${regex}]`, "g");
+}
+
+enum RegexOnlyInternal {
+    None = "",
+    Numbers = "0-9",
+    Letters = "a-zA-Z",
+    LettersAndNumbers = "a-zA-Z0-9",
 }
 

@@ -1,6 +1,7 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
-    countWords, countOccurrences, getLines, getWords, getOccurrences
+    countWords, countOccurrences, getLines, getWords, getOccurrences,
+    getOnlyNumbers, SpecialCharsOptions
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -264,4 +265,67 @@ describe("TextUtil", () => {
             expect(result).toEqual(["fox"]);
         });
     });
+
+    describe("getOnlyNumbers", () => {
+
+        const text = "{\"'Hello'\"}, <hello>ºª & [World] + 123,00 * -123° + (5%) R$ 1.000,00";
+        it("should return empty string for empty string", () => {
+            expect(getOnlyNumbers("")).toEqual("");
+            expect(getOnlyNumbers(null)).toEqual("");
+        });
+
+        it("should return empty string for string with no numbers", () => {
+            expect(getOnlyNumbers("hello")).toEqual("");
+        });
+
+        it("should return string with only numbers for string with numbers", () => {
+            expect(getOnlyNumbers(text)).toEqual("123001235100000");
+        });
+
+        it("should return string with only numbers for string with numbers and white spaces", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.WhiteSpaces)).toEqual("     12300  123  5  100000");
+        });
+        it("should return string with only numbers for string with numbers and punctuations", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Punctuations)).toEqual(",123,0012351.000,00");
+        });
+
+         it("should return string with only numbers for string with numbers and operators", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Operators)).toEqual("+12300*-123+5%100000");
+         });
+
+        it("should return string with only numbers for string with numbers and brackets", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{}[]12300123(5)100000");
+        });
+
+        it("should return string with only numbers for string with numbers and symbols", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Symbols)).toEqual("&123001235$100000");
+        });
+
+        it("should return string with only numbers for string with numbers and quotes", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Quotes)).toEqual("\"''\"123001235100000");
+        });
+
+        it("should return string with only numbers for string with numbers and special symbols", () => {
+            expect(getOnlyNumbers(text, SpecialCharsOptions.SpecialSymbols)).toEqual("ºª12300123°5100000");
+        });
+
+        it("should return string with only numbers for string with numbers, punctuations and spaces", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces;
+            expect(getOnlyNumbers(text, options)).toEqual(",     123,00  123  5  1.000,00");
+        });
+
+        it("should return string with only numbers for string with numbers, punctuations, spaces, and operators", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Operators;
+            expect(getOnlyNumbers(text, options)).toEqual(",    + 123,00 * -123 + 5%  1.000,00");
+        });
+
+        it("should return string with only numbers for string with numbers, punctuations, spaces, operators, and brackets", () => {
+            const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces |
+                SpecialCharsOptions.Operators | SpecialCharsOptions.Brackets;
+
+            expect(getOnlyNumbers(text, options)).toEqual("{},   [] + 123,00 * -123 + (5%)  1.000,00");
+        });
+ 
+    });
+ 
 });
