@@ -1,6 +1,6 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
-    countWords, countOccurrences, getLines
+    countWords, countOccurrences, getLines, getWords
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -128,7 +128,7 @@ describe("TextUtil", () => {
             expect(result).toEqual(1);
         });
     });
- 
+
     describe("isNullOrWhiteSpace", () => {
 
         it("should return true for null or undefined", () => {
@@ -205,6 +205,32 @@ describe("TextUtil", () => {
             const text = "Hello,\r\nworld!";
             const result = getLines(text);
             expect(result).toEqual(["Hello,", "world!"]);
+        });
+    });
+
+    describe("getWords", () => {
+
+        it("should return empty array for empty string", () => {
+            expect(getWords("")).toEqual([]);
+            expect(getWords(null)).toEqual([]);
+        });
+
+        it("should return array with single word for single-word string", () => {
+            const text = "hello";
+            const result = getWords(text);
+            expect(result).toEqual([text]);
+        });
+
+        it("should return array with multiple words for multi-word string", () => {
+            const text = "hello world!";
+            const result = getWords(text);
+            expect(result).toEqual(["hello", "world!"]);
+        });
+
+        it("should return array with multiple words for multi-word string with different line endings", () => {
+            const text = "hello\r\nworld!";
+            const result = getWords(text);
+            expect(result).toEqual(["hello", "world!"]);
         });
     });
 });
