@@ -51,6 +51,17 @@ export function countOccurrences(text: string, word: string, isIgnoreCase: boole
 }
 
 /**
+ * Splits a string into an array of lines, using any combination of carriage return and line feed characters as the separator.
+ * @param text The string to split into lines.
+ * @returns An array of lines.
+ */
+export function getLines(text: string): string[] {
+
+    if (isNullOrWhiteSpace(text)) return [];
+    return text.split(/\r\n|\r|\n/);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
