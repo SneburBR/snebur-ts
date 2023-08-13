@@ -9,13 +9,13 @@ export function concat(...parts: string[]): string {
     return parts.join("");
 }
 
- /**
- * Counts the number of lines in a given string of text.
- * 
- * @param text - The text to count lines in.
- * @returns The number of lines in the text.
- */
- export function countLines(text: string): number {
+/**
+* Counts the number of lines in a given string of text.
+* 
+* @param text - The text to count lines in.
+* @returns The number of lines in the text.
+*/
+export function countLines(text: string): number {
 
     if (isNullOrWhiteSpace(text)) return 0;
     return text.split(/\r\n|\r|\n/).length;
@@ -27,7 +27,7 @@ export function concat(...parts: string[]): string {
  * @returns The number of words in the text.
  */
 export function countWords(text: string): number {
-    
+
     if (isNullOrWhiteSpace(text)) return 0;
     return text.trim().split(/\s+/).length;
 }
@@ -94,9 +94,9 @@ export function getOccurrences(text: string, word: string): string[] {
         index += word.length;
     }
     return occurrences;
-    
+
 }
- 
+
 /**
  * Returns a string containing only the numbers from the input string.
  * @param value - The input string to extract numbers from.
@@ -107,7 +107,7 @@ export function getOccurrences(text: string, word: string): string[] {
 export function getOnlyNumbers(value: string, acceptOptions: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
 
     if (isNullOrWhiteSpace(value)) return "";
- 
+
     const regex = getRegexToReplace(RegexOnlyInternal.Numbers, acceptOptions);
     return value.replace(regex, replaceValue);
 }
@@ -167,7 +167,7 @@ export function isNullOrWhiteSpace(text: string): boolean {
  * @returns True if the text is a single letter, false otherwise.
  */
 export function isLetter(char: string): boolean {
-    if(isNullOrEmpty(char)) return false;
+    if (isNullOrEmpty(char)) return false;
     return char.length === 1 && char.match(/[a-z]/i) !== null;
 }
 
@@ -177,7 +177,7 @@ export function isLetter(char: string): boolean {
  * @returns True if the string is a single digit number, false otherwise.
  */
 export function isNumber(char: string): boolean {
-    if(isNullOrEmpty(char)) return false;
+    if (isNullOrEmpty(char)) return false;
     return char.length === 1 && char.match(/[0-9]/i) !== null;
 }
 
@@ -187,18 +187,18 @@ export function isNumber(char: string): boolean {
  * @returns True if the string is a letter or a number, false otherwise.
  */
 export function isLetterOrNumber(char: string): boolean {
-    if(isNullOrEmpty(char)) return false;
+    if (isNullOrEmpty(char)) return false;
     return char.length === 1 && char.match(/[a-z0-9]/i) !== null;
 }
- 
+
 /**
  * Determines if the given text is whitespace.
  * @param char The string to check.
  * @returns True if the text is whitespace, false otherwise.
  */
 export function isWhiteSpace(char: string): boolean {
-    return char === " " || char === "\t" ||  char === "\n" || char === "\r" ||  char === "\r\n" ||
-    char === "\f" ||  char === "\v";
+    return char === " " || char === "\t" || char === "\n" || char === "\r" || char === "\r\n" ||
+        char === "\f" || char === "\v";
 }
 
 /**
@@ -253,10 +253,20 @@ export function isOnlyLettersAndNumbers(text: string, specialCharsCategory: Spec
  * @returns True if the string is in all uppercase, false otherwise.
  */
 export function isUpperCase(text: string): boolean {
-    if(isNullOrWhiteSpace(text)) return false;
+    if (isNullOrWhiteSpace(text)) return false;
     return text === text.toUpperCase();
 }
- 
+
+/**
+ * Checks if a string is all lowercase.
+ * @param text - The string to check.
+ * @returns True if the string is all lowercase, false otherwise.
+ */
+export function isLowerCase(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    return text === text.toLowerCase();
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.

@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase,
+    isUpperCase, isLowerCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -847,5 +847,39 @@ describe("TextUtil", () => {
         });
     });
 
+    describe("isLowerCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isLowerCase(null)).toBe(false);
+            expect(isLowerCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isLowerCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isLowerCase(" ")).toBe(false);
+            expect(isLowerCase("  ")).toBe(false);
+            expect(isLowerCase(" \t ")).toBe(false);
+            expect(isLowerCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-lowercase string", () => {
+            expect(isLowerCase("A")).toBe(false);
+            expect(isLowerCase("Aa")).toBe(false);
+            expect(isLowerCase("AAAAA")).toBe(false);
+            expect(isLowerCase("aaaaA")).toBe(false);
+        });
+
+        it("should return true for lowercase string", () => {
+            expect(isLowerCase("a")).toBe(true);
+            expect(isLowerCase("aa")).toBe(true);
+            expect(isLowerCase("aaa")).toBe(true);
+            expect(isLowerCase("aaaa")).toBe(true);
+            expect(isLowerCase("aaaa bbb")).toBe(true);
+        });
+
+    });
 
 });
