@@ -266,7 +266,7 @@ export function isUpperCase(text: string): boolean {
  */
 export function specialConcat(parts: string[], separator: string = "", endSeparator: string | null = null): string {
 
-    if (parts.length === 0) return "";
+    if (parts == null || parts.length === 0) return "";
     if (endSeparator != null) {
 
         if (parts.length > 1) {

@@ -138,6 +138,8 @@ describe("TextUtil", () => {
     describe("specialConcat", () => {
 
         it("should concat empty string", () => {
+            expect(specialConcat(null)).toEqual("");
+            expect(specialConcat(undefined)).toEqual("");
             expect(specialConcat([])).toEqual("");
             expect(specialConcat([""])).toEqual("");
             expect(specialConcat(["", ""])).toEqual("");
@@ -843,7 +845,6 @@ describe("TextUtil", () => {
             expect(isUpperCase("AAAA")).toBe(true);
             expect(isUpperCase("AAAA BBB")).toBe(true);
         });
-
     });
 
 
