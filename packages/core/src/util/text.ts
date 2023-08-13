@@ -144,6 +144,24 @@ export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCh
 }
 
 /**
+ * Determines whether a given string is null, undefined, or empty.
+ * @param text The string to check.
+ * @returns True if the string is null, undefined, or empty; otherwise, false.
+ */
+export function isNullOrEmpty(text: string): boolean {
+    return text === null || text === undefined || text === "";
+}
+
+/**
+ * Determines whether a given string is null, undefined, or consists only of whitespace characters.
+ * @param text The string to check.
+ * @returns True if the string is null, undefined, or consists only of whitespace characters; otherwise, false.
+ */
+export function isNullOrWhiteSpace(text: string): boolean {
+    return text === null || text === undefined || text.trim() === "";
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
@@ -164,14 +182,7 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
     return parts.join(separator);
 }
 
-/**
- * Determines whether a given string is null, undefined, or consists only of whitespace characters.
- * @param text The string to check.
- * @returns True if the string is null, undefined, or consists only of whitespace characters; otherwise, false.
- */
-export function isNullOrWhiteSpace(text: string): boolean {
-    return text === null || text === undefined || text.trim() === "";
-}
+
 
 
 

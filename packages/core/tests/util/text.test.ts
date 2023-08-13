@@ -1,7 +1,10 @@
 import {
-    concat, specialConcat, isNullOrWhiteSpace, countLines,
+    concat, specialConcat, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
-    getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers, SpecialCharsOptions
+    getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers, 
+    isNullOrEmpty, isNullOrWhiteSpace,
+    SpecialCharsOptions,
+
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -129,35 +132,7 @@ describe("TextUtil", () => {
             expect(result).toEqual(1);
         });
     });
-
-    describe("isNullOrWhiteSpace", () => {
-
-        it("should return true for null or undefined", () => {
-            expect(isNullOrWhiteSpace(null)).toBe(true);
-            expect(isNullOrWhiteSpace(undefined)).toBe(true);
-        });
-
-        it("should return true for empty string", () => {
-            expect(isNullOrWhiteSpace("")).toBe(true);
-        });
-
-        it("should return true for whitespace string", () => {
-
-            expect(isNullOrWhiteSpace(" ")).toBe(true);
-            expect(isNullOrWhiteSpace("  ")).toBe(true);
-            expect(isNullOrWhiteSpace(" \t ")).toBe(true);
-            expect(isNullOrWhiteSpace(" \t \n ")).toBe(true);
-        });
-
-        it("should return false for non-whitespace string", () => {
-            expect(isNullOrWhiteSpace("hello")).toBe(false);
-            expect(isNullOrWhiteSpace(" hello")).toBe(false);
-            expect(isNullOrWhiteSpace("hello ")).toBe(false);
-            expect(isNullOrWhiteSpace(" hello ")).toBe(false);
-        });
-
-    });
-
+ 
     describe("specialConcat", () => {
 
         it("should concat empty string", () => {
@@ -425,8 +400,61 @@ describe("TextUtil", () => {
         it("should return string with only letters and numbers for string with letters, numbers and symbols", () => {
             expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Symbols)).toEqual("Hellohello&World123001235R$100000");
         });
+    });
 
+    describe("isNullOrWhiteSpace", () => {
 
+        it("should return true for null or undefined", () => {
+            expect(isNullOrWhiteSpace(null)).toBe(true);
+            expect(isNullOrWhiteSpace(undefined)).toBe(true);
+        });
+
+        it("should return true for empty string", () => {
+            expect(isNullOrWhiteSpace("")).toBe(true);
+        });
+
+        it("should return true for whitespace string", () => {
+
+            expect(isNullOrWhiteSpace(" ")).toBe(true);
+            expect(isNullOrWhiteSpace("  ")).toBe(true);
+            expect(isNullOrWhiteSpace(" \t ")).toBe(true);
+            expect(isNullOrWhiteSpace(" \t \n ")).toBe(true);
+        });
+
+        it("should return false for non-whitespace string", () => {
+            expect(isNullOrWhiteSpace("hello")).toBe(false);
+            expect(isNullOrWhiteSpace(" hello")).toBe(false);
+            expect(isNullOrWhiteSpace("hello ")).toBe(false);
+            expect(isNullOrWhiteSpace(" hello ")).toBe(false);
+        });
+
+    });
+
+    describe("isNullOrEmpty", () => {
+
+        it("should return true for null or undefined", () => {
+            expect(isNullOrEmpty(null)).toBe(true);
+            expect(isNullOrEmpty(undefined)).toBe(true);
+        });
+
+        it("should return true for empty string", () => {
+            expect(isNullOrEmpty("")).toBe(true);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isNullOrEmpty(" ")).toBe(false);
+            expect(isNullOrEmpty("  ")).toBe(false);
+            expect(isNullOrEmpty(" \t ")).toBe(false);
+            expect(isNullOrEmpty(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-whitespace string", () => {
+            expect(isNullOrEmpty("hello")).toBe(false);
+            expect(isNullOrEmpty(" hello")).toBe(false);
+            expect(isNullOrEmpty("hello ")).toBe(false);
+            expect(isNullOrEmpty(" hello ")).toBe(false);
+        });
 
     });
 });
