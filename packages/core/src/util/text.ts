@@ -406,6 +406,28 @@ export function removeDoubleWhiteSpace(text: string): string {
     return text.replace(/\s{2,}/g, " ");
 }
 
+
+/**
+ * Removes the specified leading character(s) from the beginning of the given text.
+ * 
+ * @param text - The text to remove the leading character(s) from.
+ * @param startChar - The character(s) to remove from the beginning of the text.
+ * @param isRecursive - Whether to remove all leading occurrences of the start character(s) (true) or only the first occurrence (false).
+ * @returns The text with the leading character(s) removed.
+ */
+export function removeLeading(text: string, startChar: string, isRecursive: boolean = false): string {
+
+    if (isNullOrEmpty(text)) return "";
+    if (isNullOrEmpty(startChar)) return text;
+
+    let result = text;
+    while (result.startsWith(startChar)) {
+        result = result.substring(startChar.length);
+        if (!isRecursive) break;
+    }
+    return result;
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.

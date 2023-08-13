@@ -6,7 +6,7 @@ import {
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
-    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace,
+    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace, removeLeading,
     SpecialCharsOptions,
 } from "../../src/util/text";
 
@@ -1272,6 +1272,34 @@ describe("TextUtil", () => {
             expect(removeDoubleWhiteSpace("a \r\n   \ta")).toBe("a a");
             expect(removeDoubleWhiteSpace(" a \f \va ")).toBe(" a a ");
         });
+    });
+
+    describe("removeLeading", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeLeading(null, "a")).toBe("");
+            expect(removeLeading("", "a")).toBe("");
+            expect(removeLeading(undefined, "a")).toBe("");
+            expect(removeLeading(null, null)).toBe("");
+            expect(removeLeading(undefined, undefined)).toBe("");
+        });
+
+
+        it("should return string without leading chars", () => {
+            expect(removeLeading("/Hello World", "/")).toBe("Hello World");
+            expect(removeLeading("//Hello World", "/")).toBe("/Hello World");
+            expect(removeLeading("//Hello World", "/", true)).toBe("Hello World");
+            expect(removeLeading("///Hello World", "/", true)).toBe("Hello World");
+            expect(removeLeading("///Hello World", "/", false)).toBe("//Hello World");
+
+            expect(removeLeading("\\Hello World", "\\")).toBe("Hello World");
+            expect(removeLeading("\\\\Hello World", "\\")).toBe("\\Hello World");
+            expect(removeLeading("\\\\Hello World", "\\", true)).toBe("Hello World");
+
+            expect(removeLeading(".Hello World", ".")).toBe("Hello World");
+            expect(removeLeading("..Hello World", ".")).toBe(".Hello World");
+            expect(removeLeading("..Hello World", ".", true)).toBe("Hello World");
+         });
 
     });
 });
