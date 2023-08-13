@@ -280,6 +280,13 @@ export function isCamelCase(text: string): boolean {
     return isLowerCase(text[0]);
 }
 
+export function isPascalCase(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    const lettersAndNumbers = getOnlyLettersAndNumbers(text);
+    if(lettersAndNumbers.length !== text.length) return false;
+    return isUpperCase(text[0]);
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.

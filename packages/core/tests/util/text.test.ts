@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase, isLowerCase, isCapitalized, isCamelCase,
+    isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -944,6 +944,40 @@ describe("TextUtil", () => {
             expect(isCamelCase("aaaaa")).toBe(true);
             expect(isCamelCase("aaaaaBbbbb")).toBe(true);
             expect(isCamelCase("aaaBbbbb")).toBe(true);
+        });
+
+    });
+
+    describe("isPascalCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isPascalCase(null)).toBe(false);
+            expect(isPascalCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isPascalCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isPascalCase(" ")).toBe(false);
+            expect(isPascalCase("  ")).toBe(false);
+            expect(isPascalCase(" \t ")).toBe(false);
+            expect(isPascalCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-pascalCase string", () => {
+            expect(isPascalCase("a")).toBe(false);
+            expect(isPascalCase("aaaaa")).toBe(false);
+            expect(isPascalCase("aaaaa bbbbb")).toBe(false);
+            expect(isPascalCase("aaaaaBbbbb")).toBe(false);
+        });
+
+        it("should return true for pascalCase string", () => {
+            expect(isPascalCase("A")).toBe(true);
+            expect(isPascalCase("Aaaaaa")).toBe(true);
+            expect(isPascalCase("AaaaaBbbbb")).toBe(true);
+            expect(isPascalCase("AaaaBbbbb")).toBe(true);
         });
 
     });
