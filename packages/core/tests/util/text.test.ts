@@ -1,8 +1,8 @@
 import {
     concat, specialConcat, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
-    getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers, 
-    isNullOrEmpty, isNullOrWhiteSpace, isLetter,
+    getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
+    isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -132,7 +132,7 @@ describe("TextUtil", () => {
             expect(result).toEqual(1);
         });
     });
- 
+
     describe("specialConcat", () => {
 
         it("should concat empty string", () => {
@@ -302,7 +302,7 @@ describe("TextUtil", () => {
         });
 
     });
- 
+
     describe("getOnlyLetters", () => {
 
         const text = "{\"'Hello'\"}, <hello>ºª & [World] + 123,00 * -123° + (5%) R$ 1.000,00";
@@ -495,4 +495,51 @@ describe("TextUtil", () => {
         });
 
     });
+
+    describe("isNumber", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isNumber(null)).toBe(false);
+            expect(isNumber(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isNumber("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isNumber(" ")).toBe(false);
+            expect(isNumber("  ")).toBe(false);
+            expect(isNumber(" \t ")).toBe(false);
+            expect(isNumber(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-number string", () => {
+            expect(isNumber("ab")).toBe(false);
+            expect(isNumber("ca")).toBe(false);
+            expect(isNumber("a5")).toBe(false);
+            expect(isNumber("1a")).toBe(false);
+            expect(isNumber("%")).toBe(false);
+            expect(isNumber("&")).toBe(false);
+            expect(isNumber("´")).toBe(false);
+            expect(isNumber("º")).toBe(false);
+            expect(isNumber("12")).toBe(false);
+            expect(isNumber("34")).toBe(false);
+        });
+
+        it("should return true for number string", () => {
+            expect(isNumber("1")).toBe(true);
+            expect(isNumber("2")).toBe(true);
+            expect(isNumber("3")).toBe(true);
+            expect(isNumber("4")).toBe(true);
+            expect(isNumber("5")).toBe(true);
+            expect(isNumber("6")).toBe(true);
+            expect(isNumber("7")).toBe(true);
+            expect(isNumber("8")).toBe(true);
+            expect(isNumber("9")).toBe(true);
+            expect(isNumber("0")).toBe(true);
+        });
+    });
+
 });
