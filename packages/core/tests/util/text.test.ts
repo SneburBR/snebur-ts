@@ -5,7 +5,7 @@ import {
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
-    removeSpecialChars, removeAccents, removerSpecialChars,
+    removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -1087,7 +1087,7 @@ describe("TextUtil", () => {
         });
 
         it("should return string without accents", () => {
-            expect(removeAccents("a")).toBe("a");
+            expect(removeAccents("á")).toBe("a");
             expect(removeAccents("à")).toBe("a");
             expect(removeAccents("â")).toBe("a");
             expect(removeAccents("é")).toBe("e");
@@ -1130,10 +1130,50 @@ describe("TextUtil", () => {
         });
 
         it("should return string without  special chars", () => {
-            expect(removerSpecialChars("a%")).toBe("a");
+            expect(removerSpecialChars("a%", " ")).toBe("a ");
             expect(removerSpecialChars("a%&")).toBe("a");
             expect(removerSpecialChars("a, a")).toBe("a, a");
             expect(removerSpecialChars("a: a")).toBe("a a");
         });
+    });
+
+    describe("removerAccentsAndSpecialChars", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removerAccentsAndSpecialChars(null)).toBe("");
+            expect(removerAccentsAndSpecialChars(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removerAccentsAndSpecialChars("")).toBe("");
+        });
+
+        it("should return string without accents and special chars", () => {
+            expect(removerAccentsAndSpecialChars("á%", " ")).toBe("a ");
+            expect(removerAccentsAndSpecialChars("a%&")).toBe("a");
+            expect(removerAccentsAndSpecialChars("a, a")).toBe("a, a");
+            expect(removerAccentsAndSpecialChars("a: a")).toBe("a a");
+            expect(removerAccentsAndSpecialChars("a")).toBe("a");
+            expect(removerAccentsAndSpecialChars("à%")).toBe("a");
+            expect(removerAccentsAndSpecialChars("â%")).toBe("a");
+            //expect(removerAccentsAndSpecialChars("é&é", " ")).toBe("e e");
+            expect(removerAccentsAndSpecialChars("è")).toBe("e");
+            expect(removerAccentsAndSpecialChars("ê")).toBe("e");
+            expect(removerAccentsAndSpecialChars("î")).toBe("i");
+            expect(removerAccentsAndSpecialChars("ï")).toBe("i");
+            expect(removerAccentsAndSpecialChars("ô")).toBe("o");
+            expect(removerAccentsAndSpecialChars("ù")).toBe("u");
+            expect(removerAccentsAndSpecialChars("û")).toBe("u");
+            expect(removerAccentsAndSpecialChars("ü")).toBe("u");
+            expect(removerAccentsAndSpecialChars("ç")).toBe("c");
+            expect(removerAccentsAndSpecialChars("À")).toBe("A");
+            expect(removerAccentsAndSpecialChars("Â")).toBe("A");
+            expect(removerAccentsAndSpecialChars("É")).toBe("E");
+            expect(removerAccentsAndSpecialChars("È")).toBe("E");
+            expect(removerAccentsAndSpecialChars("Ê")).toBe("E");
+            expect(removerAccentsAndSpecialChars("Î")).toBe("I");
+            expect(removerAccentsAndSpecialChars("Ï")).toBe("I");
+        });
+
     });
 });

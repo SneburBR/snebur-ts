@@ -347,9 +347,9 @@ export function removeSpecialChars(value: string, options: SpecialCharsOptions =
  * @param replaceValue - The value to replace the accents with. Defaults to an empty string.
  * @returns The string with accents removed.
  */
-export function removeAccents(value: string, replaceValue: string = ""): string {
+export function removeAccents(value: string): string {
     if (value == null || value.length === 0) return "";
-    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, replaceValue);
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 /**
@@ -362,6 +362,16 @@ export function removerSpecialChars(value: string, replaceValue: string = ""): s
     if (value == null || value.length === 0) return "";
     const regex = new RegExp(`[^a-zA-Z0-9áàâãäéèêëíìîïóòôõöúùûüçÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ\\.\\,\\s]`, "g");
     return value.replace(regex, replaceValue);
+}
+
+/**
+ * Removes accents and special characters from a string.
+ * @param value - The string to remove accents and special characters from.
+ * @param replaceValue - The value to replace the removed characters with. Defaults to an empty string.
+ * @returns The string with accents and special characters removed.
+ */
+export function removerAccentsAndSpecialChars(value: string, replaceValue: string = ""): string {
+    return removerSpecialChars(removeAccents(value), replaceValue);
 }
 
 /**
