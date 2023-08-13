@@ -108,7 +108,7 @@ export function getOnlyNumbers(value: string, acceptOptions: SpecialCharsOptions
 
     if (isNullOrWhiteSpace(value)) return "";
 
-    const regex = getRegexToReplace(RegexOnlyInternal.Numbers, acceptOptions);
+    const regex = getRegexNotContains(RegexOnlyInternal.Numbers, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -124,7 +124,7 @@ export function getOnlyLetters(value: string, acceptOptions: SpecialCharsOptions
 
     if (isNullOrWhiteSpace(value)) return "";
 
-    const regex = getRegexToReplace(RegexOnlyInternal.Letters, acceptOptions);
+    const regex = getRegexNotContains(RegexOnlyInternal.Letters, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -139,7 +139,7 @@ export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCh
 
     if (isNullOrWhiteSpace(value)) return "";
 
-    const regex = getRegexToReplace(RegexOnlyInternal.LettersAndNumbers, acceptOptions);
+    const regex = getRegexNotContains(RegexOnlyInternal.LettersAndNumbers, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -219,7 +219,7 @@ export function isStartsWithNumber(value: string): boolean {
  */
 export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
     if (text == null || text.length === 0) return false;
-    const regex = getRegexToTest(RegexOnlyInternal.Letters, specialCharsCategory);
+    const regex = getRegexTest(RegexOnlyInternal.Letters, specialCharsCategory);
     return regex.test(text);
 }
 
@@ -231,7 +231,7 @@ export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOp
  */
 export function isOnlyNumbers(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
     if (text == null || text.length === 0) return false;
-    const regex = getRegexToTest(RegexOnlyInternal.Numbers, specialCharsCategory);
+    const regex = getRegexTest(RegexOnlyInternal.Numbers, specialCharsCategory);
     return regex.test(text);
 }
 
@@ -243,7 +243,7 @@ export function isOnlyNumbers(text: string, specialCharsCategory: SpecialCharsOp
  */
 export function isOnlyLettersAndNumbers(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
     if (text == null || text.length === 0) return false;
-    const regex = getRegexToTest(RegexOnlyInternal.LettersAndNumbers, specialCharsCategory);
+    const regex = getRegexTest(RegexOnlyInternal.LettersAndNumbers, specialCharsCategory);
     return regex.test(text);
 }
 
@@ -274,10 +274,10 @@ export function isLowerCase(text: string): boolean {
  */
 export function isCapitalized(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
-    if(text.length === 1) return isUpperCase(text);
+    if (text.length === 1) return isUpperCase(text);
     return isUpperCase(text[0]) && isLowerCase(text.substring(1));
 }
- 
+
 /**
  * Determines whether a given string is in camelCase format.
  * @param text The string to check.
@@ -285,9 +285,9 @@ export function isCapitalized(text: string): boolean {
  */
 export function isCamelCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
-    if(text[0] === "_") text = text.substring(1);
+    if (text[0] === "_") text = text.substring(1);
     const lettersAndNumbers = getOnlyLettersAndNumbers(text);
-    if(lettersAndNumbers.length !== text.length) return false;
+    if (lettersAndNumbers.length !== text.length) return false;
     return isLowerCase(text[0]);
 }
 
@@ -299,7 +299,7 @@ export function isCamelCase(text: string): boolean {
 export function isPascalCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text);
-    if(lettersAndNumbers.length !== text.length) return false;
+    if (lettersAndNumbers.length !== text.length) return false;
     return isUpperCase(text[0]);
 }
 
@@ -311,7 +311,7 @@ export function isPascalCase(text: string): boolean {
 export function isSnakeCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Underscore);
-    if(lettersAndNumbers.length !== text.length) return false;
+    if (lettersAndNumbers.length !== text.length) return false;
     return isLowerCase(text);
 }
 
@@ -324,8 +324,21 @@ export function isSnakeCase(text: string): boolean {
 export function isKebabCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Dash);
-    if(lettersAndNumbers.length !== text.length) return false;
+    if (lettersAndNumbers.length !== text.length) return false;
     return isLowerCase(text);
+}
+
+/**
+ * Removes special characters from a string based on the provided options.
+ * @param value - The string to remove special characters from.
+ * @param options - The options for which special characters to remove.
+ * @param replaceValue - The value to replace the removed special characters with.
+ * @returns The string with the special characters removed.
+ */
+export function removeSpecialChars(value: string, options: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
+    if(value == null || value.length === 0) return "";
+    const regex = getRegexContains(RegexOnlyInternal.None, options);
+    return value.replace(regex, replaceValue);
 }
 
 /**
@@ -356,7 +369,7 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
 /* eslint-disable no-unused-vars */
 const punctuation = ".,;:!?";
 const operators = `\\+\\-\\*\\/\\%=`;
-const brackets = "\\(\\)\\[\\]\\{\\}";
+const brackets = "\\(\\)\\[\\]\\{\\}\\<\\>";
 const symbols = "~^\\/|@#$&";
 const quotes = "\"'`";
 const specialSymbols = "°ºª§";
@@ -378,12 +391,17 @@ export enum SpecialCharsOptions {
     Dash = 256,
 }
 
-function getRegexToReplace(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+function getRegexNotContains(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
     const regex = getRegexInternal("^" + only, options);
     return new RegExp(`[${regex}]`, "g");
 }
 
-function getRegexToTest(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+function getRegexContains(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+    const regex = getRegexInternal(only, options);
+    return new RegExp(`[${regex}]`, "g");
+}
+
+function getRegexTest(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
     const regex = getRegexInternal(only, options);
     return new RegExp(`^[${regex}]+$`);
 }

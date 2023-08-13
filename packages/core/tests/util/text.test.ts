@@ -5,6 +5,7 @@ import {
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
+    removeSpecialChars,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -273,7 +274,7 @@ describe("TextUtil", () => {
         });
 
         it("should return string with only numbers for string with numbers and brackets", () => {
-            expect(getOnlyNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{}[]12300123(5)100000");
+            expect(getOnlyNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{}<>[]12300123(5)100000");
         });
 
         it("should return string with only numbers for string with numbers and symbols", () => {
@@ -302,7 +303,7 @@ describe("TextUtil", () => {
             const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces |
                 SpecialCharsOptions.Operators | SpecialCharsOptions.Brackets;
 
-            expect(getOnlyNumbers(text, options)).toEqual("{},   [] + 123,00 * -123 + (5%)  1.000,00");
+            expect(getOnlyNumbers(text, options)).toEqual("{}, <>  [] + 123,00 * -123 + (5%)  1.000,00");
         });
 
     });
@@ -336,7 +337,7 @@ describe("TextUtil", () => {
         });
 
         it("should return string with only letters for string with letters and brackets", () => {
-            expect(getOnlyLetters(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}hello[World]()R");
+            expect(getOnlyLetters(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}<hello>[World]()R");
         });
 
         it("should return string with only letters for string with letters and symbols", () => {
@@ -365,7 +366,7 @@ describe("TextUtil", () => {
             const options = SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces |
                 SpecialCharsOptions.Operators | SpecialCharsOptions.Brackets;
 
-            expect(getOnlyLetters(text, options)).toEqual("{Hello}, hello  [World] + , * - + (%) R .,");
+            expect(getOnlyLetters(text, options)).toEqual("{Hello}, <hello>  [World] + , * - + (%) R .,");
         });
     });
 
@@ -398,7 +399,7 @@ describe("TextUtil", () => {
         });
 
         it("should return string with only letters and numbers for string with letters, numbers and brackets", () => {
-            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}hello[World]12300123(5)R100000");
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}<hello>[World]12300123(5)R100000");
         });
 
         it("should return string with only letters and numbers for string with letters, numbers and symbols", () => {
@@ -1048,8 +1049,30 @@ describe("TextUtil", () => {
             expect(isKebabCase("aaaaa-bbbbb")).toBe(true);
             expect(isKebabCase("aaaaa-bbbbb-aa")).toBe(true);
         });
+    });
 
+    describe("removeSpecialChars", () => {
 
+        it("should return null for null or undefined", () => {
+            expect(removeSpecialChars(null)).toBe("");
+            expect(removeSpecialChars(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removeSpecialChars("")).toBe("");
+        });
+
+        it("should return string without special chars", () => {
+            expect(removeSpecialChars("a")).toBe("a");
+            expect(removeSpecialChars("a.", SpecialCharsOptions.Punctuations)).toBe("a");
+            expect(removeSpecialChars("a!b", SpecialCharsOptions.Punctuations)).toBe("ab");
+            expect(removeSpecialChars("a!b?", SpecialCharsOptions.Punctuations)).toBe("ab");
+            expect(removeSpecialChars("(ab)", SpecialCharsOptions.Brackets)).toBe("ab");
+            expect(removeSpecialChars("{(ab)}", SpecialCharsOptions.Brackets)).toBe("ab");
+            expect(removeSpecialChars("<{(ab)}>", SpecialCharsOptions.Brackets)).toBe("ab");
+            expect(removeSpecialChars("<{(ab)}> ?.a", SpecialCharsOptions.Brackets | SpecialCharsOptions.Punctuations | SpecialCharsOptions.WhiteSpaces)).toBe("aba");
+            expect(removeSpecialChars("<{(ab)}> ?.a", SpecialCharsOptions.Brackets | SpecialCharsOptions.Punctuations)).toBe("ab a");
+        });
     });
 
 });
