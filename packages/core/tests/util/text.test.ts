@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase, isLowerCase, isCapitalized,
+    isUpperCase, isLowerCase, isCapitalized, isCamelCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -902,7 +902,6 @@ describe("TextUtil", () => {
 
         it("should return false for non-capitalized string", () => {
             expect(isCapitalized("a")).toBe(false);
-            // expect(isCapitalized("Aa")).toBe(false);
             expect(isCapitalized("aaaaa")).toBe(false);
             expect(isCapitalized("aaaaa bbbbb")).toBe(false);
         });
@@ -913,7 +912,39 @@ describe("TextUtil", () => {
             expect(isCapitalized("Aaaa")).toBe(true);
             expect(isCapitalized("Aaaa bbbbb")).toBe(true);
         });
+    });
 
+    describe("isCamelCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isCamelCase(null)).toBe(false);
+            expect(isCamelCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isCamelCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isCamelCase(" ")).toBe(false);
+            expect(isCamelCase("  ")).toBe(false);
+            expect(isCamelCase(" \t ")).toBe(false);
+            expect(isCamelCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-camelCase string", () => {
+            expect(isCamelCase("Aa")).toBe(false);
+            expect(isCamelCase("Aaaaaa")).toBe(false);
+            expect(isCamelCase("aaaaa bbbbb")).toBe(false);
+            expect(isCamelCase("Aaaa bbbbb")).toBe(false);
+        });
+
+        it("should return true for camelCase string", () => {
+            expect(isCamelCase("a")).toBe(true);
+            expect(isCamelCase("aaaaa")).toBe(true);
+            expect(isCamelCase("aaaaaBbbbb")).toBe(true);
+            expect(isCamelCase("aaaBbbbb")).toBe(true);
+        });
 
     });
 

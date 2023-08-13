@@ -273,6 +273,13 @@ export function isCapitalized(text: string): boolean {
     return isUpperCase(text[0]) && isLowerCase(text.substring(1));
 }
  
+export function isCamelCase(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    const lettersAndNumbers = getOnlyLettersAndNumbers(text);
+    if(lettersAndNumbers.length !== text.length) return false;
+    return isLowerCase(text[0]);
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
