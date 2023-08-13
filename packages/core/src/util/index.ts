@@ -1,9 +1,11 @@
 import * as FileUtil from "./file";
-import * as StringUtil from "./string";
+import * as TextUtil from "./text";
 import * as ValidationUtil from "./validation";
+import * as ConvertUtil from "./convert";
 
 export {       
     ValidationUtil,
-    StringUtil,
-    FileUtil
+    TextUtil,
+    FileUtil,
+    ConvertUtil,
 };
