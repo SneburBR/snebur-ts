@@ -466,6 +466,22 @@ export function removeLeadingAndTrailing(text: string, char: string, isRecursive
 }
 
 /**
+ * Removes a range of characters from a string.
+ * @param str - The input string.
+ * @param start - The starting index of the range to remove.
+ * @param end - The ending index of the range to remove.
+ * @returns The input string with the specified range removed.
+ */
+export function removeRange(str: string, start: number, end: number): string {
+
+    if (isNullOrEmpty(str)) return "";
+    if (start < 0) start = 0;
+    if (start === end) str;
+    if (end > str.length) end = str.length;
+    return str.substring(0, start) + str.substring(end, str.length);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

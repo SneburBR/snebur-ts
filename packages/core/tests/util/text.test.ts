@@ -6,7 +6,7 @@ import {
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
-    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace,
+    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace, removeRange,
     removeLeading, removeTrailing, removeLeadingAndTrailing, SpecialCharsOptions,
 } from "../../src/util/text";
 
@@ -1353,6 +1353,23 @@ describe("TextUtil", () => {
             expect(removeLeadingAndTrailing(".Hello World.", ".")).toBe("Hello World");
             expect(removeLeadingAndTrailing("..Hello World..", ".")).toBe(".Hello World.");
             expect(removeLeadingAndTrailing("..Hello World..", ".", true)).toBe("Hello World");
+        });
+    });
+
+    describe("removeRange", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeRange(null, 0, 1)).toBe("");
+            expect(removeRange("", 0, 1)).toBe("");
+            expect(removeRange(undefined, 0, 1)).toBe("");
+        });
+
+        it("should return string without range", () => {
+            expect(removeRange("Hello World", 0, 1)).toBe("ello World");
+            expect(removeRange("Hello World", 1, 1)).toBe("Hello World");
+            expect(removeRange("Hello World", 1, 2)).toBe("Hllo World");
+            expect(removeRange("Hello World", 1, 3)).toBe("Hlo World");
+            expect(removeRange("Hello World", 1, 4)).toBe("Ho World");
         });
 
     });
