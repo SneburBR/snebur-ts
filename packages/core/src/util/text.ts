@@ -267,12 +267,22 @@ export function isLowerCase(text: string): boolean {
     return text === text.toLowerCase();
 }
 
+/**
+ * Determines whether a given string is capitalized.
+ * @param text - The string to check.
+ * @returns `true` if the string is capitalized, `false` otherwise.
+ */
 export function isCapitalized(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     if(text.length === 1) return isUpperCase(text);
     return isUpperCase(text[0]) && isLowerCase(text.substring(1));
 }
  
+/**
+ * Determines whether a given string is in camelCase format.
+ * @param text The string to check.
+ * @returns True if the string is in camelCase format, false otherwise.
+ */
 export function isCamelCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     if(text[0] === "_") text = text.substring(1);
@@ -281,6 +291,11 @@ export function isCamelCase(text: string): boolean {
     return isLowerCase(text[0]);
 }
 
+/**
+ * Determines whether a string is in PascalCase format.
+ * @param text The string to check.
+ * @returns True if the string is in PascalCase format, false otherwise.
+ */
 export function isPascalCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text);
@@ -288,6 +303,11 @@ export function isPascalCase(text: string): boolean {
     return isUpperCase(text[0]);
 }
 
+/**
+ * Determines whether a given string is in snake_case format.
+ * @param text The string to check.
+ * @returns True if the string is in snake_case format, false otherwise.
+ */
 export function isSnakeCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Underscore);
@@ -295,6 +315,12 @@ export function isSnakeCase(text: string): boolean {
     return isLowerCase(text);
 }
 
+/**
+ * Checks if a given string is in kebab-case format.
+ * 
+ * @param text - The string to check.
+ * @returns True if the string is in kebab-case format, false otherwise.
+ */
 export function isKebabCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
     const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Dash);
