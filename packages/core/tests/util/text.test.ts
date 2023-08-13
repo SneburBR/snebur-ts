@@ -3,7 +3,7 @@ import {
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
-    isWhiteSpace,
+    isWhiteSpace, isStartsWithNumber,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -616,6 +616,50 @@ describe("TextUtil", () => {
             expect(isWhiteSpace("\f")).toBe(true);
             expect(isWhiteSpace("\v")).toBe(true);
         });
+    });
+
+    describe("isStartsWithNumber", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isStartsWithNumber(null)).toBe(false);
+            expect(isStartsWithNumber(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isStartsWithNumber("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isStartsWithNumber(" ")).toBe(false);
+            expect(isStartsWithNumber("  ")).toBe(false);
+            expect(isStartsWithNumber(" \t ")).toBe(false);
+            expect(isStartsWithNumber(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-number string", () => {
+            expect(isStartsWithNumber("ab")).toBe(false);
+            expect(isStartsWithNumber("ca")).toBe(false);
+            expect(isStartsWithNumber("a5")).toBe(false);
+            expect(isStartsWithNumber("%")).toBe(false);
+            expect(isStartsWithNumber("&")).toBe(false);
+            expect(isStartsWithNumber("´")).toBe(false);
+            expect(isStartsWithNumber("º")).toBe(false);
+        });
+
+        it("should return true for number string", () => {
+            expect(isStartsWithNumber("1")).toBe(true);
+            expect(isStartsWithNumber("2Hello")).toBe(true);
+            expect(isStartsWithNumber("3Hello world")).toBe(true);
+            expect(isStartsWithNumber("4.")).toBe(true);
+            expect(isStartsWithNumber("5%")).toBe(true);
+            expect(isStartsWithNumber("6% &")).toBe(true);
+            expect(isStartsWithNumber("7 hello")).toBe(true);
+            expect(isStartsWithNumber("8, 0 hello world")).toBe(true);
+            expect(isStartsWithNumber("9")).toBe(true);
+            expect(isStartsWithNumber("0")).toBe(true);
+        });
+        
     });
 
 });

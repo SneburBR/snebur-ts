@@ -202,6 +202,16 @@ export function isWhiteSpace(char: string): boolean {
 }
 
 /**
+ * Checks if a string starts with a number.
+ * @param value - The string to check.
+ * @returns True if the string starts with a number, false otherwise.
+ */
+export function isStartsWithNumber(value: string): boolean {
+    if (value == null || value.length === 0) return false;
+    return !isNaN(parseInt(value[0]));
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
