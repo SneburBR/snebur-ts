@@ -1,7 +1,7 @@
 import {
     concat, specialConcat, isNullOrWhiteSpace, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
-    getOnlyNumbers, getOnlyLetters, SpecialCharsOptions
+    getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers, SpecialCharsOptions
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -388,5 +388,45 @@ describe("TextUtil", () => {
 
             expect(getOnlyLetters(text, options)).toEqual("{Hello}, hello  [World] + , * - + (%) R .,");
         });
+    });
+
+    describe("getOnlyLettersAndNumbers", () => {
+
+        const text = "{\"'Hello'\"}, <hello>ºª & [World] + 123,00 * -123° + (5%) R$ 1.000,00";
+        it("should return empty string for empty string", () => {
+            expect(getOnlyLettersAndNumbers("")).toEqual("");
+            expect(getOnlyLettersAndNumbers(null)).toEqual("");
+        });
+
+        it("should return empty string for string with no letters and numbers", () => {
+            expect(getOnlyLettersAndNumbers("()[]{}")).toEqual("");
+        });
+
+        it("should return string with only letters and numbers for string with letters and numbers", () => {
+            expect(getOnlyLettersAndNumbers(text)).toEqual("HellohelloWorld123001235R100000");
+        });
+
+        it("should return string with only letters and numbers for string with letters, numbers and white spaces", () => {
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.WhiteSpaces)).toEqual("Hello hello  World  12300  123  5 R 100000");
+        });
+
+        it("should return string with only letters and numbers for string with letters, numbers and punctuations", () => {
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Punctuations)).toEqual("Hello,helloWorld123,001235R1.000,00");
+        });
+
+        it("should return string with only letters and numbers for string with letters, numbers and operators", () => {
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Operators)).toEqual(`HellohelloWorld+12300*-123+5%R100000`);
+        });
+
+        it("should return string with only letters and numbers for string with letters, numbers and brackets", () => {
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Brackets)).toEqual("{Hello}hello[World]12300123(5)R100000");
+        });
+
+        it("should return string with only letters and numbers for string with letters, numbers and symbols", () => {
+            expect(getOnlyLettersAndNumbers(text, SpecialCharsOptions.Symbols)).toEqual("Hellohello&World123001235R$100000");
+        });
+
+
+
     });
 });

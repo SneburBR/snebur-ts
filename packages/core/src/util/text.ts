@@ -129,6 +129,21 @@ export function getOnlyLetters(value: string, acceptOptions: SpecialCharsOptions
 }
 
 /**
+ * Returns a new string containing only letters and numbers from the input string.
+ * @param value The input string to filter.
+ * @param acceptOptions The special characters to allow in the output string. Defaults to `SpecialCharsOptions.None`.
+ * @param replaceValue The string to replace the filtered characters with. Defaults to an empty string.
+ * @returns A new string containing only letters and numbers from the input string.
+ */
+export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
+
+    if (isNullOrWhiteSpace(value)) return "";
+
+    const regex = getRegexInternal(RegexOnlyInternal.LettersAndNumbers, acceptOptions);
+    return value.replace(regex, replaceValue);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
