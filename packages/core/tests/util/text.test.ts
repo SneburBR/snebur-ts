@@ -2,7 +2,7 @@ import {
     concat, specialConcat, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
-    isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber,
+    isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -539,6 +539,53 @@ describe("TextUtil", () => {
             expect(isNumber("8")).toBe(true);
             expect(isNumber("9")).toBe(true);
             expect(isNumber("0")).toBe(true);
+        });
+    });
+
+    describe("isLetterOrNumber", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isLetterOrNumber(null)).toBe(false);
+            expect(isLetterOrNumber(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isLetterOrNumber("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isLetterOrNumber(" ")).toBe(false);
+            expect(isLetterOrNumber("  ")).toBe(false);
+            expect(isLetterOrNumber(" \t ")).toBe(false);
+            expect(isLetterOrNumber(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-letter or non-number string", () => {
+            expect(isLetterOrNumber("ab")).toBe(false);
+            expect(isLetterOrNumber("ca")).toBe(false);
+            expect(isLetterOrNumber("a5")).toBe(false);
+            expect(isLetterOrNumber("1a")).toBe(false);
+            expect(isLetterOrNumber("%")).toBe(false);
+            expect(isLetterOrNumber("&")).toBe(false);
+            expect(isLetterOrNumber("´")).toBe(false);
+            expect(isLetterOrNumber("º")).toBe(false);
+        });
+
+        it("should return true for letter or number string", () => {
+            expect(isLetterOrNumber("1")).toBe(true);
+            expect(isLetterOrNumber("2")).toBe(true);
+            expect(isLetterOrNumber("3")).toBe(true);
+            expect(isLetterOrNumber("4")).toBe(true);
+            expect(isLetterOrNumber("5")).toBe(true);
+            expect(isLetterOrNumber("6")).toBe(true);
+            expect(isLetterOrNumber("7")).toBe(true);
+            expect(isLetterOrNumber("8")).toBe(true);
+            expect(isLetterOrNumber("9")).toBe(true);
+            expect(isLetterOrNumber("0")).toBe(true);
+            expect(isLetterOrNumber("a")).toBe(true);
+            expect(isLetterOrNumber("b")).toBe(true);
+            expect(isLetterOrNumber("c")).toBe(true);
         });
     });
 
