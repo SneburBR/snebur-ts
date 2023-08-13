@@ -182,6 +182,16 @@ export function isNumber(text: string): boolean {
 }
 
 /**
+ * Checks if a given string is a letter or a number.
+ * @param text - The string to check.
+ * @returns True if the string is a letter or a number, false otherwise.
+ */
+export function isLetterOrNumber(text: string): boolean {
+    if(isNullOrEmpty(text)) return false;
+    return text.length === 1 && text.match(/[a-z0-9]/i) !== null;
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
