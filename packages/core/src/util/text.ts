@@ -248,6 +248,16 @@ export function isOnlyLettersAndNumbers(text: string, specialCharsCategory: Spec
 }
 
 /**
+ * Checks if a given string is in all uppercase.
+ * @param text - The string to check.
+ * @returns True if the string is in all uppercase, false otherwise.
+ */
+export function isUpperCase(text: string): boolean {
+    if(isNullOrWhiteSpace(text)) return false;
+    return text === text.toUpperCase();
+}
+ 
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

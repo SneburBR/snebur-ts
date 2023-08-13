@@ -4,6 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
+    isUpperCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -806,8 +807,43 @@ describe("TextUtil", () => {
             expect(isOnlyLettersAndNumbers("Hello World 123", SpecialCharsOptions.WhiteSpaces)).toBe(true);
             expect(isOnlyLettersAndNumbers("Hello.World,123", SpecialCharsOptions.Punctuations)).toBe(true);
             expect(isOnlyLettersAndNumbers("Hello World. 123", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
-             expect(isOnlyLettersAndNumbers("Hello World, world!\r\n world? 123", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello World, world!\r\n world? 123", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
         });
+    });
+
+    describe("isUpperCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isUpperCase(null)).toBe(false);
+            expect(isUpperCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isUpperCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isUpperCase(" ")).toBe(false);
+            expect(isUpperCase("  ")).toBe(false);
+            expect(isUpperCase(" \t ")).toBe(false);
+            expect(isUpperCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-uppercase string", () => {
+            expect(isUpperCase("a")).toBe(false);
+            expect(isUpperCase("Aa")).toBe(false);
+            expect(isUpperCase("aAAAAA")).toBe(false);
+            expect(isUpperCase("AAAAa")).toBe(false);
+        });
+
+        it("should return true for uppercase string", () => {
+            expect(isUpperCase("A")).toBe(true);
+            expect(isUpperCase("AA")).toBe(true);
+            expect(isUpperCase("AAA")).toBe(true);
+            expect(isUpperCase("AAAA")).toBe(true);
+            expect(isUpperCase("AAAA BBB")).toBe(true);
+        });
+
     });
 
 
