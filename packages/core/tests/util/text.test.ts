@@ -5,7 +5,7 @@ import {
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
-    removeSpecialChars,
+    removeSpecialChars, removeAccents,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -1075,4 +1075,46 @@ describe("TextUtil", () => {
         });
     });
 
+    describe("removeAccents", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeAccents(null)).toBe("");
+            expect(removeAccents(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removeAccents("")).toBe("");
+        });
+
+        it("should return string without accents", () => {
+            expect(removeAccents("a")).toBe("a");
+            expect(removeAccents("à")).toBe("a");
+            expect(removeAccents("â")).toBe("a");
+            expect(removeAccents("é")).toBe("e");
+            expect(removeAccents("è")).toBe("e");
+            expect(removeAccents("ê")).toBe("e");
+            expect(removeAccents("î")).toBe("i");
+            expect(removeAccents("ï")).toBe("i");
+            expect(removeAccents("ô")).toBe("o");
+            expect(removeAccents("ù")).toBe("u");
+            expect(removeAccents("û")).toBe("u");
+            expect(removeAccents("ü")).toBe("u");
+            expect(removeAccents("ç")).toBe("c");
+            expect(removeAccents("À")).toBe("A");
+            expect(removeAccents("Â")).toBe("A");
+            expect(removeAccents("É")).toBe("E");
+            expect(removeAccents("È")).toBe("E");
+            expect(removeAccents("Ê")).toBe("E");
+            expect(removeAccents("Î")).toBe("I");
+            expect(removeAccents("Ï")).toBe("I");
+            expect(removeAccents("Ô")).toBe("O");
+            expect(removeAccents("Ù")).toBe("U");
+            expect(removeAccents("Û")).toBe("U");
+            expect(removeAccents("Ü")).toBe("U");
+            expect(removeAccents("Ç")).toBe("C");
+            expect(removeAccents("àáã")).toBe("aaa");
+            expect(removeAccents("àáãâ èéêë")).toBe("aaaa eeee");
+            expect(removeAccents("ÀÁÃÂ ÈÉÊË")).toBe("AAAA EEEE");
+        });
+    });
 });

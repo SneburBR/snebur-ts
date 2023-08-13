@@ -342,6 +342,17 @@ export function removeSpecialChars(value: string, options: SpecialCharsOptions =
 }
 
 /**
+ * Removes accents from a string by replacing them with the specified value or an empty string.
+ * @param value - The string to remove accents from.
+ * @param replaceValue - The value to replace the accents with. Defaults to an empty string.
+ * @returns The string with accents removed.
+ */
+export function removeAccents(value: string, replaceValue: string = ""): string {
+    if (value == null || value.length === 0) return "";
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, replaceValue);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
