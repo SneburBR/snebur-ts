@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase,
+    isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -1014,6 +1014,41 @@ describe("TextUtil", () => {
             expect(isSnakeCase("aaaaa_bbbbb")).toBe(true);
             expect(isSnakeCase("aaaaa_bbbbb_aa")).toBe(true);
         });
+
+    });
+
+    describe("isKebabCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isKebabCase(null)).toBe(false);
+            expect(isKebabCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isKebabCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isKebabCase(" ")).toBe(false);
+            expect(isKebabCase("  ")).toBe(false);
+            expect(isKebabCase(" \t ")).toBe(false);
+            expect(isKebabCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-kebabCase string", () => {
+            expect(isKebabCase("aaaaa bbbbb")).toBe(false);
+            expect(isKebabCase("aaaaaBbbbb")).toBe(false);
+            expect(isKebabCase("aaaaa-bbbbb ")).toBe(false);
+        });
+
+        it("should return true for kebabCase string", () => {
+            expect(isKebabCase("a")).toBe(true);
+            expect(isKebabCase("aaaaa")).toBe(true);
+            expect(isKebabCase("aaaaa-bbbbb")).toBe(true);
+            expect(isKebabCase("aaaaa-bbbbb")).toBe(true);
+            expect(isKebabCase("aaaaa-bbbbb-aa")).toBe(true);
+        });
+
 
     });
 

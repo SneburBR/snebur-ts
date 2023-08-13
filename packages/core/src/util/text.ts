@@ -295,6 +295,13 @@ export function isSnakeCase(text: string): boolean {
     return isLowerCase(text);
 }
 
+export function isKebabCase(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Dash);
+    if(lettersAndNumbers.length !== text.length) return false;
+    return isLowerCase(text);
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
@@ -342,6 +349,7 @@ export enum SpecialCharsOptions {
     Quotes = 32,
     SpecialSymbols = 64,
     Underscore = 128,
+    Dash = 256,
 }
 
 function getRegexToReplace(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
@@ -364,6 +372,7 @@ function getRegexInternal(only: string, options: SpecialCharsOptions): string {
     if (options & SpecialCharsOptions.Quotes) regex += quotes;
     if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
     if (options & SpecialCharsOptions.Underscore) regex += underscore;
+    if (options & SpecialCharsOptions.Dash) regex += "-";
     return regex;
 }
 
