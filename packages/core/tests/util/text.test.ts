@@ -3,7 +3,7 @@ import {
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
-    isWhiteSpace, isStartsWithNumber,
+    isWhiteSpace, isStartsWithNumber, isOnlyLetters,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -660,6 +660,55 @@ describe("TextUtil", () => {
             expect(isStartsWithNumber("0")).toBe(true);
         });
         
+    });
+
+    describe("isOnlyLetters", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isOnlyLetters(null)).toBe(false);
+            expect(isOnlyLetters(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isOnlyLetters("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isOnlyLetters(" ")).toBe(false);
+            expect(isOnlyLetters("  ")).toBe(false);
+            expect(isOnlyLetters(" \t ")).toBe(false);
+            expect(isOnlyLetters(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-letter string", () => {
+            expect(isOnlyLetters("1")).toBe(false);
+            expect(isOnlyLetters("%")).toBe(false);
+            expect(isOnlyLetters("2  hello")).toBe(false);
+            expect(isOnlyLetters("3")).toBe(false);
+             expect(isOnlyLetters("1a  hello")).toBe(false);
+            expect(isOnlyLetters("1%  hello")).toBe(false);
+            expect(isOnlyLetters(" hello 1&")).toBe(false);
+            expect(isOnlyLetters(" hello 1´")).toBe(false);
+            expect(isOnlyLetters(" hello 1º")).toBe(false);
+            expect(isOnlyLetters("%  hello")).toBe(false);
+            expect(isOnlyLetters("&  hello")).toBe(false);
+            expect(isOnlyLetters("´  hello")).toBe(false);
+            expect(isOnlyLetters("º  hello")).toBe(false);
+        });
+
+        it("should return true for letter string", () => {
+            expect(isOnlyLetters("HelloWorld")).toBe(true);
+            expect(isOnlyLetters("a")).toBe(true);
+             
+        });
+
+        it("should return true for letter string and special chars ", () => {
+            expect(isOnlyLetters("Hello World", SpecialCharsOptions.WhiteSpaces )).toBe(true);
+            expect(isOnlyLetters("Hello.World", SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLetters("Hello World.", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLetters("Hello World, world!\r\n world?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+        });
     });
 
 });

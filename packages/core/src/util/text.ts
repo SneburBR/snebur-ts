@@ -108,7 +108,7 @@ export function getOnlyNumbers(value: string, acceptOptions: SpecialCharsOptions
 
     if (isNullOrWhiteSpace(value)) return "";
  
-    const regex = getRegexInternal(RegexOnlyInternal.Numbers, acceptOptions);
+    const regex = getRegexToReplace(RegexOnlyInternal.Numbers, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -124,7 +124,7 @@ export function getOnlyLetters(value: string, acceptOptions: SpecialCharsOptions
 
     if (isNullOrWhiteSpace(value)) return "";
 
-    const regex = getRegexInternal(RegexOnlyInternal.Letters, acceptOptions);
+    const regex = getRegexToReplace(RegexOnlyInternal.Letters, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -139,7 +139,7 @@ export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCh
 
     if (isNullOrWhiteSpace(value)) return "";
 
-    const regex = getRegexInternal(RegexOnlyInternal.LettersAndNumbers, acceptOptions);
+    const regex = getRegexToReplace(RegexOnlyInternal.LettersAndNumbers, acceptOptions);
     return value.replace(regex, replaceValue);
 }
 
@@ -212,6 +212,18 @@ export function isStartsWithNumber(value: string): boolean {
 }
 
 /**
+ * Checks if a string contains only letters.
+ * @param text - The string to check.
+ * @param specialCharsCategory - Optional parameter to allow additional special characters.
+ * @returns True if the string contains only letters, false otherwise.
+ */
+export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    const regex = getRegexToTest(RegexOnlyInternal.Letters, specialCharsCategory);
+    return regex.test(text);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
@@ -258,8 +270,18 @@ export enum SpecialCharsOptions {
     SpecialSymbols = 64,
 }
 
-function getRegexInternal(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
-    let regex = only + "";
+function getRegexToReplace(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+    const regex = getRegexInternal("^" + only, options);
+    return new RegExp(`[${regex}]`, "g");
+}
+
+function getRegexToTest(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
+    const regex = getRegexInternal(only, options);
+    return new RegExp(`^[${regex}]+$`);
+}
+
+function getRegexInternal(only: string, options: SpecialCharsOptions): string {
+    let regex = only;
     if (options & SpecialCharsOptions.WhiteSpaces) regex += "\\s";
     if (options & SpecialCharsOptions.Punctuations) regex += punctuation;
     if (options & SpecialCharsOptions.Operators) regex += operators;
@@ -267,7 +289,7 @@ function getRegexInternal(only: RegexOnlyInternal, options: SpecialCharsOptions)
     if (options & SpecialCharsOptions.Symbols) regex += symbols;
     if (options & SpecialCharsOptions.Quotes) regex += quotes;
     if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
-    return new RegExp(`[^${regex}]`, "g");
+    return regex;
 }
 
 enum RegexOnlyInternal {
