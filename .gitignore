@@ -3,12 +3,11 @@ node_modules/
 build
 logs
 dist
-
-
+ 
 #files
 *.log
 *.log.*
 *.js
 *.map
 *.d.ts
-```
+*.skl
