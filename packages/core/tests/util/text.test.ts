@@ -6,9 +6,8 @@ import {
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
-    removeDiacritics,
+    removeDiacritics, removeWhiteSpace,
     SpecialCharsOptions,
-
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -1217,6 +1216,30 @@ describe("TextUtil", () => {
            expect(removeDiacritics("àáã")).toBe("aaa");
            expect(removeDiacritics("àáãâ èéêë")).toBe("aaaa eeee");
            expect(removeDiacritics("ÀÁÃÂ ÈÉÊË")).toBe("AAAA EEEE");
+        });
+    });
+
+    describe("removeWhiteSpace", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeWhiteSpace(null)).toBe("");
+            expect(removeWhiteSpace(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removeWhiteSpace("")).toBe("");
+        });
+
+        it("should return string without white spaces", () => {
+            expect(removeWhiteSpace("a%")).toBe("a%");
+            expect(removeWhiteSpace("a%&")).toBe("a%&");
+            expect(removeWhiteSpace("a, a")).toBe("a,a");
+            expect(removeWhiteSpace("a: a")).toBe("a:a");
+            expect(removeWhiteSpace("a")).toBe("a");
+            expect(removeWhiteSpace("a ")).toBe("a");
+            expect(removeWhiteSpace(" a")).toBe("a");
+            expect(removeWhiteSpace(" a ")).toBe("a");
+            expect(removeWhiteSpace(" a b ")).toBe("ab");
         });
 
     });

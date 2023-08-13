@@ -386,6 +386,17 @@ export function removeDiacritics(value: string, replaceValue: string = ""): stri
 }   
 
 /**
+ * Removes all whitespace characters from a string.
+ * @param value - The string to remove whitespace from.
+ * @param replaceValue - The string to replace whitespace with. Defaults to an empty string.
+ * @returns A new string with all whitespace characters removed.
+ */
+export function removeWhiteSpace(value: string, replaceValue: string = ""): string {
+    if (value == null || value.length === 0) return "";
+    return value.replace(/\s/g, replaceValue);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
