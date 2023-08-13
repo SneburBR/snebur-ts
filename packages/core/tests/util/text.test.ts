@@ -3,7 +3,7 @@ import {
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
-    isWhiteSpace, isStartsWithNumber, isOnlyLetters,
+    isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -659,7 +659,7 @@ describe("TextUtil", () => {
             expect(isStartsWithNumber("9")).toBe(true);
             expect(isStartsWithNumber("0")).toBe(true);
         });
-        
+
     });
 
     describe("isOnlyLetters", () => {
@@ -686,7 +686,7 @@ describe("TextUtil", () => {
             expect(isOnlyLetters("%")).toBe(false);
             expect(isOnlyLetters("2  hello")).toBe(false);
             expect(isOnlyLetters("3")).toBe(false);
-             expect(isOnlyLetters("1a  hello")).toBe(false);
+            expect(isOnlyLetters("1a  hello")).toBe(false);
             expect(isOnlyLetters("1%  hello")).toBe(false);
             expect(isOnlyLetters(" hello 1&")).toBe(false);
             expect(isOnlyLetters(" hello 1´")).toBe(false);
@@ -700,15 +700,59 @@ describe("TextUtil", () => {
         it("should return true for letter string", () => {
             expect(isOnlyLetters("HelloWorld")).toBe(true);
             expect(isOnlyLetters("a")).toBe(true);
-             
+
         });
 
         it("should return true for letter string and special chars ", () => {
-            expect(isOnlyLetters("Hello World", SpecialCharsOptions.WhiteSpaces )).toBe(true);
+            expect(isOnlyLetters("Hello World", SpecialCharsOptions.WhiteSpaces)).toBe(true);
             expect(isOnlyLetters("Hello.World", SpecialCharsOptions.Punctuations)).toBe(true);
             expect(isOnlyLetters("Hello World.", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
             expect(isOnlyLetters("Hello World, world!\r\n world?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
         });
     });
+
+    describe("isOnlyNumbers", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isOnlyNumbers(null)).toBe(false);
+            expect(isOnlyNumbers(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isOnlyNumbers("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isOnlyNumbers(" ")).toBe(false);
+            expect(isOnlyNumbers("  ")).toBe(false);
+            expect(isOnlyNumbers(" \t ")).toBe(false);
+            expect(isOnlyNumbers(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-number string", () => {
+            expect(isOnlyNumbers("a")).toBe(false);
+            expect(isOnlyNumbers("%")).toBe(false);
+            expect(isOnlyNumbers("2  hello 1234")).toBe(false);
+            expect(isOnlyNumbers("1a  1234")).toBe(false);
+            expect(isOnlyNumbers("1%  1234")).toBe(false);
+            expect(isOnlyNumbers(" 1234 1&")).toBe(false);
+            expect(isOnlyNumbers(" 1234 1´")).toBe(false);
+            expect(isOnlyNumbers(" 1234 1º")).toBe(false);
+            expect(isOnlyNumbers("%  1234")).toBe(false);
+            expect(isOnlyNumbers("&  1234")).toBe(false);
+            expect(isOnlyNumbers("´  1234")).toBe(false);
+            expect(isOnlyNumbers("º  1234")).toBe(false);
+        });
+
+        it("should return true for number string", () => {
+            expect(isOnlyNumbers("1234567890")).toBe(true);
+            expect(isOnlyNumbers("12345 67890", SpecialCharsOptions.WhiteSpaces)).toBe(true);
+            expect(isOnlyNumbers("12345.67890", SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyNumbers("12345 67890.", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyNumbers("12345, \r\n67890?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+        });
+    });
+    
 
 });

@@ -224,6 +224,17 @@ export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOp
 }
 
 /**
+ * Checks if a string contains only numeric characters.
+ * @param text The string to check.
+ * @param specialCharsCategory The category of special characters to allow in the string. Defaults to `SpecialCharsOptions.None`.
+ * @returns `true` if the string contains only numeric characters, `false` otherwise.
+ */
+export function isOnlyNumbers(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
+    const regex = getRegexToTest(RegexOnlyInternal.Numbers, specialCharsCategory);
+    return regex.test(text);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
