@@ -2,7 +2,7 @@ import {
     concat, specialConcat, countLines,
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers, 
-    isNullOrEmpty, isNullOrWhiteSpace,
+    isNullOrEmpty, isNullOrWhiteSpace, isLetter,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -454,6 +454,44 @@ describe("TextUtil", () => {
             expect(isNullOrEmpty(" hello")).toBe(false);
             expect(isNullOrEmpty("hello ")).toBe(false);
             expect(isNullOrEmpty(" hello ")).toBe(false);
+        });
+
+    });
+
+    describe("isLetter", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isLetter(null)).toBe(false);
+            expect(isLetter(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isLetter("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isLetter(" ")).toBe(false);
+            expect(isLetter("  ")).toBe(false);
+            expect(isLetter(" \t ")).toBe(false);
+            expect(isLetter(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-letter string", () => {
+            expect(isLetter("ab")).toBe(false);
+            expect(isLetter("ca")).toBe(false);
+            expect(isLetter("5")).toBe(false);
+            expect(isLetter("1")).toBe(false);
+            expect(isLetter("%")).toBe(false);
+            expect(isLetter("&")).toBe(false);
+            expect(isLetter("´")).toBe(false);
+            expect(isLetter("º")).toBe(false);
+        });
+
+        it("should return true for letter string", () => {
+            expect(isLetter("a")).toBe(true);
+            expect(isLetter("b")).toBe(true);
+            expect(isLetter("c")).toBe(true);
         });
 
     });

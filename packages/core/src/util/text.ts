@@ -149,7 +149,7 @@ export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCh
  * @returns True if the string is null, undefined, or empty; otherwise, false.
  */
 export function isNullOrEmpty(text: string): boolean {
-    return text === null || text === undefined || text === "";
+    return text == null || text === "";
 }
 
 /**
@@ -158,7 +158,17 @@ export function isNullOrEmpty(text: string): boolean {
  * @returns True if the string is null, undefined, or consists only of whitespace characters; otherwise, false.
  */
 export function isNullOrWhiteSpace(text: string): boolean {
-    return text === null || text === undefined || text.trim() === "";
+    return text == null || text.trim() === "";
+}
+
+/**
+ * Determines whether the given text is a single letter (a-z or A-Z).
+ * @param text The text to check.
+ * @returns True if the text is a single letter, false otherwise.
+ */
+export function isLetter(text: string): boolean {
+    if(isNullOrEmpty(text)) return false;
+    return text.length === 1 && text.match(/[a-z]/i) !== null;
 }
 
 /**
