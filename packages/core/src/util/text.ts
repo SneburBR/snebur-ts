@@ -272,7 +272,7 @@ export function isCapitalized(text: string): boolean {
     if(text.length === 1) return isUpperCase(text);
     return isUpperCase(text[0]) && isLowerCase(text.substring(1));
 }
-
+ 
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
@@ -305,6 +305,7 @@ const brackets = "\\(\\)\\[\\]\\{\\}";
 const symbols = "~^\\/|@#$&";
 const quotes = "\"'`";
 const specialSymbols = "°ºª§";
+const underscore = "_";
 
 /**
  * Options for including special characters in a regular expression pattern.
@@ -318,6 +319,7 @@ export enum SpecialCharsOptions {
     Brackets = 16,
     Quotes = 32,
     SpecialSymbols = 64,
+    Underscore = 128,
 }
 
 function getRegexToReplace(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
@@ -339,6 +341,7 @@ function getRegexInternal(only: string, options: SpecialCharsOptions): string {
     if (options & SpecialCharsOptions.Symbols) regex += symbols;
     if (options & SpecialCharsOptions.Quotes) regex += quotes;
     if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
+    if (options & SpecialCharsOptions.Underscore) regex += underscore;
     return regex;
 }
 
