@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase,
+    isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -978,6 +978,40 @@ describe("TextUtil", () => {
             expect(isPascalCase("Aaaaaa")).toBe(true);
             expect(isPascalCase("AaaaaBbbbb")).toBe(true);
             expect(isPascalCase("AaaaBbbbb")).toBe(true);
+        });
+
+    });
+
+    describe("isSnakeCase", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isSnakeCase(null)).toBe(false);
+            expect(isSnakeCase(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isSnakeCase("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isSnakeCase(" ")).toBe(false);
+            expect(isSnakeCase("  ")).toBe(false);
+            expect(isSnakeCase(" \t ")).toBe(false);
+            expect(isSnakeCase(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-snakeCase string", () => {
+            expect(isSnakeCase("aaaaa bbbbb")).toBe(false);
+            expect(isSnakeCase("aaaaaBbbbb")).toBe(false);
+            expect(isSnakeCase("aaaaa_bbbbb ")).toBe(false);
+        });
+
+        it("should return true for snakeCase string", () => {
+            expect(isSnakeCase("a")).toBe(true);
+            expect(isSnakeCase("aaaaa")).toBe(true);
+            expect(isSnakeCase("aaaaa_bbbbb")).toBe(true);
+            expect(isSnakeCase("aaaaa_bbbbb")).toBe(true);
+            expect(isSnakeCase("aaaaa_bbbbb_aa")).toBe(true);
         });
 
     });

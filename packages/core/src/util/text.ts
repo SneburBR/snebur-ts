@@ -287,6 +287,13 @@ export function isPascalCase(text: string): boolean {
     return isUpperCase(text[0]);
 }
 
+export function isSnakeCase(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    const lettersAndNumbers = getOnlyLettersAndNumbers(text, SpecialCharsOptions.Underscore);
+    if(lettersAndNumbers.length !== text.length) return false;
+    return isLowerCase(text);
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
