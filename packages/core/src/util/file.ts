@@ -1,9 +1,9 @@
 import FileSaver from "file-saver";
-import { isEmptyOrWhitespace } from "./string";
+import { isNullOrWhiteSpace } from "./text";
 import { isBase64 } from "./validation";
 import { base64ToString } from "./convert";
 
-const PATH_MODULE = "@snebur/core/util/file";
+const MODULE_PATH = "@snebur/core/util/file";
 const invalidPathChars = ["\\", "/", ":", "*", "?", "\"", "<", ">", "|"];
 const isNode = typeof window === "undefined";
 
@@ -16,7 +16,7 @@ const isNode = typeof window === "undefined";
 export function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
     if (!isBase64(base64))
-        throw new Error(`${PATH_MODULE}::base64ToArrayBuffer# ${base64} is not a valid base64 string`);
+        throw new Error(`${MODULE_PATH}::base64ToArrayBuffer# ${base64} is not a valid base64 string`);
 
     const binaryString = base64ToString(base64);
     const binaryLen = binaryString.length;
@@ -50,10 +50,10 @@ export function base64ToBlob(base64: string, mimeType: string): Blob {
 export function changeExtension(fileName: string, extension: string): string {
 
     if (fileName == null)
-        throw new Error(`${PATH_MODULE}::changeExtension# ${fileName} is not a valid file name`);
+        throw new Error(`${MODULE_PATH}::changeExtension# ${fileName} is not a valid file name`);
 
     if (extension == null)
-        throw new Error(`${PATH_MODULE}::changeExtension# ${extension} is not a valid file extension`);
+        throw new Error(`${MODULE_PATH}::changeExtension# ${extension} is not a valid file extension`);
 
     const fileNameWithoutExtension = getFileNameWithoutExtension(fileName);
     const normalizedExtension = normalizeExtension(extension);
@@ -100,7 +100,7 @@ export function getBase64FromUrlAsync(url: string, isIgnoreError: boolean): Prom
             if (isIgnoreError)
                 resolve(null);
             else
-                reject(new Error(`${PATH_MODULE}::getBase64FromUrlAsync Failed to load ${url}`));
+                reject(new Error(`${MODULE_PATH}::getBase64FromUrlAsync Failed to load ${url}`));
         };
         xhr.open("GET", url);
         xhr.responseType = "blob";
@@ -159,7 +159,7 @@ export function getFileName(filePathOrBlob: string | Blob): string {
     if (typeof filePathOrBlob === "string")
         return filePathOrBlob.split("\\").pop()!.split("/").pop()!;
 
-    throw new Error(`${PATH_MODULE}::getFileName# ${filePathOrBlob} is not a valid file path or blob`);
+    throw new Error(`${MODULE_PATH}::getFileName# ${filePathOrBlob} is not a valid file path or blob`);
 }
 
 /**
@@ -183,9 +183,9 @@ export function getFileNameWithoutExtension(filePathOrBlob: string | Blob): stri
 export function getName(blob: Blob): string {
 
     if (blob == null)
-        throw new Error(`${PATH_MODULE}::getName# ${blob} is not a valid blob`);
+        throw new Error(`${MODULE_PATH}::getName# ${blob} is not a valid blob`);
 
-    if (isEmptyOrWhitespace(blob.name))
+    if (isNullOrWhiteSpace(blob.name))
         return `blob-${blob.size}-${normalizeFileName(blob.type)}`;
 
     return blob.name;
@@ -206,7 +206,7 @@ export function getMimetype(filePathOrBlob: string | Blob): string {
         const extension = getExtension(filePathOrBlob);
         return getMimetypeFromExtension(extension);
     }
-    throw new Error(`${PATH_MODULE}::getMimetype# ${filePathOrBlob} is not a valid file path or blob`);
+    throw new Error(`${MODULE_PATH}::getMimetype# ${filePathOrBlob} is not a valid file path or blob`);
 }
 
 /**
@@ -218,7 +218,7 @@ export function getMimetype(filePathOrBlob: string | Blob): string {
 export function getMimetypeFromExtension(extension: string): string {
 
     if (extension == null)
-        throw new Error(`${PATH_MODULE}::getMimetypeFromExtension# ${extension} is not a valid file extension`);
+        throw new Error(`${MODULE_PATH}::getMimetypeFromExtension# ${extension} is not a valid file extension`);
 
     throw new Error("Not implemented");
 }
@@ -232,7 +232,7 @@ export function getMimetypeFromExtension(extension: string): string {
 export function normalizeExtension(extension: string): string {
 
     if (extension == null)
-        throw new Error(`${PATH_MODULE}::normalizeExtension# ${extension} is not a valid file extension`);
+        throw new Error(`${MODULE_PATH}::normalizeExtension# ${extension} is not a valid file extension`);
 
     return extension.startsWith(".") ? extension : `.${extension}`;
 }
@@ -260,24 +260,24 @@ export function normalizeFileName(fileName: string): string {
 export function saveFile(content: string | Uint8Array | ArrayBuffer, fileName: string, mimeType: string): void {
 
     if (content == null)
-        throw new Error(`${PATH_MODULE}::saveFile# ${content} is not a valid file content`);
+        throw new Error(`${MODULE_PATH}::saveFile# ${content} is not a valid file content`);
 
     if (fileName == null)
-        throw new Error(`${PATH_MODULE}::saveFile# ${fileName} is not a valid file name`);
+        throw new Error(`${MODULE_PATH}::saveFile# ${fileName} is not a valid file name`);
 
     if (mimeType == null)
-        throw new Error(`${PATH_MODULE}::saveFile# ${mimeType} is not a valid file mime type`);
- 
+        throw new Error(`${MODULE_PATH}::saveFile# ${mimeType} is not a valid file mime type`);
+
     if (isNode) {
         const fs = require("fs");
         const path = require("path");
         const filePath = path.resolve(fileName);
-             fs.writeFileSync(filePath, content);
+        fs.writeFileSync(filePath, content);
         return;
     }
 
-    const  blob = content instanceof Uint8Array || content instanceof ArrayBuffer
-            ? new Blob(["content"], { type: mimeType })
-            : new Blob(["content"]);
+    const blob = content instanceof Uint8Array || content instanceof ArrayBuffer
+        ? new Blob(["content"], { type: mimeType })
+        : new Blob(["content"]);
     FileSaver.saveAs(blob, fileName);
 }
