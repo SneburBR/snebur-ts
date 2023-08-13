@@ -944,6 +944,7 @@ describe("TextUtil", () => {
             expect(isCamelCase("aaaaa")).toBe(true);
             expect(isCamelCase("aaaaaBbbbb")).toBe(true);
             expect(isCamelCase("aaaBbbbb")).toBe(true);
+            expect(isCamelCase("_aaaBbbbb")).toBe(true);
         });
 
     });

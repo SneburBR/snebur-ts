@@ -275,6 +275,7 @@ export function isCapitalized(text: string): boolean {
  
 export function isCamelCase(text: string): boolean {
     if (isNullOrWhiteSpace(text)) return false;
+    if(text[0] === "_") text = text.substring(1);
     const lettersAndNumbers = getOnlyLettersAndNumbers(text);
     if(lettersAndNumbers.length !== text.length) return false;
     return isLowerCase(text[0]);
