@@ -429,6 +429,43 @@ export function removeLeading(text: string, startChar: string, isRecursive: bool
 }
 
 /**
+ * Removes trailing occurrences of a specified character from a string.
+ * @param text - The input string.
+ * @param endChar - The character to remove from the end of the string.
+ * @param isRecursive - A boolean value indicating whether to remove all trailing occurrences of the specified character.
+ * @returns The input string with trailing occurrences of the specified character removed.
+ */
+export function removeTrailing(text: string, endChar: string, isRecursive: boolean = false): string {
+
+    if (isNullOrEmpty(text)) return "";
+    if (isNullOrEmpty(endChar)) return text;
+
+    let result = text;
+    while (result.endsWith(endChar)) {
+        result = result.substring(0, result.length - endChar.length);
+        if (!isRecursive) break;
+    }
+    return result;
+}
+
+/**
+ * Removes leading and trailing occurrences of a specified character from a string.
+ * @param text - The input string to remove leading and trailing characters from.
+ * @param char - The character to remove from the beginning and end of the input string.
+ * @param isRecursive - A boolean value indicating whether to remove the specified character recursively.
+ * @returns The input string with leading and trailing occurrences of the specified character removed.
+ */
+export function removeLeadingAndTrailing(text: string, char: string, isRecursive: boolean = false): string {
+
+    if (isNullOrEmpty(text)) return "";
+    if (isNullOrEmpty(char)) return text;
+
+    let result = removeLeading(text, char, isRecursive);
+    result = removeTrailing(result, char, isRecursive);
+    return result;
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

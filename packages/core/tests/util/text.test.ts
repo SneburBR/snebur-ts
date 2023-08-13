@@ -6,8 +6,8 @@ import {
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
-    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace, removeLeading,
-    SpecialCharsOptions,
+    removeDiacritics, removeWhiteSpace, removeDoubleWhiteSpace,
+    removeLeading, removeTrailing, removeLeadingAndTrailing, SpecialCharsOptions,
 } from "../../src/util/text";
 
 import { describe, expect, it } from "vitest";
@@ -1299,7 +1299,61 @@ describe("TextUtil", () => {
             expect(removeLeading(".Hello World", ".")).toBe("Hello World");
             expect(removeLeading("..Hello World", ".")).toBe(".Hello World");
             expect(removeLeading("..Hello World", ".", true)).toBe("Hello World");
-         });
+        });
+    });
+
+    describe("removeTrailing", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeTrailing(null, "a")).toBe("");
+            expect(removeTrailing("", "a")).toBe("");
+            expect(removeTrailing(undefined, "a")).toBe("");
+            expect(removeTrailing(null, null)).toBe("");
+            expect(removeTrailing(undefined, undefined)).toBe("");
+        });
+
+        it("should return string without trailing chars", () => {
+            expect(removeTrailing("Hello World/", "/")).toBe("Hello World");
+            expect(removeTrailing("Hello World//", "/")).toBe("Hello World/");
+            expect(removeTrailing("Hello World//", "/", true)).toBe("Hello World");
+            expect(removeTrailing("Hello World///", "/", true)).toBe("Hello World");
+            expect(removeTrailing("Hello World///", "/", false)).toBe("Hello World//");
+
+            expect(removeTrailing("Hello World\\", "\\")).toBe("Hello World");
+            expect(removeTrailing("Hello World\\\\", "\\")).toBe("Hello World\\");
+            expect(removeTrailing("Hello World\\\\", "\\", true)).toBe("Hello World");
+
+            expect(removeTrailing("Hello World.", ".")).toBe("Hello World");
+            expect(removeTrailing("Hello World..", ".")).toBe("Hello World.");
+            expect(removeTrailing("Hello World..", ".", true)).toBe("Hello World");
+        });
+    });
+
+    describe("removeLeadingAndTrailing", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeLeadingAndTrailing(null, "a")).toBe("");
+            expect(removeLeadingAndTrailing("", "a")).toBe("");
+            expect(removeLeadingAndTrailing(undefined, "a")).toBe("");
+            expect(removeLeadingAndTrailing(null, null)).toBe("");
+            expect(removeLeadingAndTrailing(undefined, undefined)).toBe("");
+        });
+
+        it("should return string without leading and trailing chars", () => {
+            expect(removeLeadingAndTrailing("/Hello World/", "/")).toBe("Hello World");
+            expect(removeLeadingAndTrailing("//Hello World//", "/")).toBe("/Hello World/");
+            expect(removeLeadingAndTrailing("//Hello World//", "/", true)).toBe("Hello World");
+            expect(removeLeadingAndTrailing("///Hello World///", "/", true)).toBe("Hello World");
+            expect(removeLeadingAndTrailing("///Hello World///", "/", false)).toBe("//Hello World//");
+
+            expect(removeLeadingAndTrailing("\\Hello World\\", "\\")).toBe("Hello World");
+            expect(removeLeadingAndTrailing("\\\\Hello World\\\\", "\\")).toBe("\\Hello World\\");
+            expect(removeLeadingAndTrailing("\\\\Hello World\\\\", "\\", true)).toBe("Hello World");
+
+            expect(removeLeadingAndTrailing(".Hello World.", ".")).toBe("Hello World");
+            expect(removeLeadingAndTrailing("..Hello World..", ".")).toBe(".Hello World.");
+            expect(removeLeadingAndTrailing("..Hello World..", ".", true)).toBe("Hello World");
+        });
 
     });
 });
