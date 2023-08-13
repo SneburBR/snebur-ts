@@ -353,6 +353,18 @@ export function removeAccents(value: string, replaceValue: string = ""): string 
 }
 
 /**
+ * Removes all special characters from a string and returns the result.
+ * @param value - The string to remove special characters from.
+ * @param replaceValue - The value to replace the special characters with. Defaults to an empty string.
+ * @returns The string with all special characters removed.
+ */
+export function removerSpecialChars(value: string, replaceValue: string = ""): string {
+    if (value == null || value.length === 0) return "";
+    const regex = new RegExp(`[^a-zA-Z0-9áàâãäéèêëíìîïóòôõöúùûüçÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ\\.\\,\\s]`, "g");
+    return value.replace(regex, replaceValue);
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

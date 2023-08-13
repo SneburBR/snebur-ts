@@ -5,7 +5,7 @@ import {
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
-    removeSpecialChars, removeAccents,
+    removeSpecialChars, removeAccents, removerSpecialChars,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -1115,6 +1115,25 @@ describe("TextUtil", () => {
             expect(removeAccents("àáã")).toBe("aaa");
             expect(removeAccents("àáãâ èéêë")).toBe("aaaa eeee");
             expect(removeAccents("ÀÁÃÂ ÈÉÊË")).toBe("AAAA EEEE");
+        });
+    });
+
+    describe("removerSpecialChars", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removerSpecialChars(null)).toBe("");
+            expect(removerSpecialChars(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removerSpecialChars("")).toBe("");
+        });
+
+        it("should return string without  special chars", () => {
+            expect(removerSpecialChars("a%")).toBe("a");
+            expect(removerSpecialChars("a%&")).toBe("a");
+            expect(removerSpecialChars("a, a")).toBe("a, a");
+            expect(removerSpecialChars("a: a")).toBe("a a");
         });
     });
 });
