@@ -27,6 +27,7 @@
   ],
   "dependencies": {
     "@types/file-saver": "^2.0.5",
-    "file-saver": "^2.0.5"
+    "file-saver": "^2.0.5",
+    "pluralize-ptbr": "^1.0.4"
   }
 }
