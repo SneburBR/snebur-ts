@@ -375,6 +375,17 @@ export function removerAccentsAndSpecialChars(value: string, replaceValue: strin
 }
 
 /**
+ * Removes diacritics from a string by replacing them with the specified value or an empty string.
+ * @param value - The string to remove diacritics from.
+ * @param replaceValue - The value to replace the diacritics with. Defaults to an empty string.
+ * @returns  The string with diacritics removed.
+ */
+export function removeDiacritics(value: string, replaceValue: string = ""): string {
+    if (value == null || value.length === 0) return "";
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, replaceValue);
+}   
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.

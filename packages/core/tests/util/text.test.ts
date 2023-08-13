@@ -6,6 +6,7 @@ import {
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     isUpperCase, isLowerCase, isCapitalized, isCamelCase, isPascalCase, isSnakeCase, isKebabCase,
     removeSpecialChars, removeAccents, removerSpecialChars, removerAccentsAndSpecialChars,
+    removeDiacritics,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -1173,6 +1174,49 @@ describe("TextUtil", () => {
             expect(removerAccentsAndSpecialChars("Ê")).toBe("E");
             expect(removerAccentsAndSpecialChars("Î")).toBe("I");
             expect(removerAccentsAndSpecialChars("Ï")).toBe("I");
+        });
+    });
+
+    describe("removeDiacritics", () => {
+
+        it("should return null for null or undefined", () => {
+            expect(removeDiacritics(null)).toBe("");
+            expect(removeDiacritics(undefined)).toBe("");
+        });
+
+        it("should return empty string for empty string", () => {
+            expect(removeDiacritics("")).toBe("");
+        });
+
+        it("should return string without accents and special chars", () => {
+           expect(removeDiacritics("á")).toBe("a");
+           expect(removeDiacritics("à")).toBe("a");
+           expect(removeDiacritics("â")).toBe("a");
+           expect(removeDiacritics("é")).toBe("e");
+           expect(removeDiacritics("è")).toBe("e");
+           expect(removeDiacritics("ê")).toBe("e");
+           expect(removeDiacritics("î")).toBe("i");
+           expect(removeDiacritics("ï")).toBe("i");
+           expect(removeDiacritics("ô")).toBe("o");
+           expect(removeDiacritics("ù")).toBe("u");
+           expect(removeDiacritics("û")).toBe("u");
+           expect(removeDiacritics("ü")).toBe("u");
+           expect(removeDiacritics("ç")).toBe("c");
+           expect(removeDiacritics("À")).toBe("A");
+           expect(removeDiacritics("Â")).toBe("A");
+           expect(removeDiacritics("É")).toBe("E");
+           expect(removeDiacritics("È")).toBe("E");
+           expect(removeDiacritics("Ê")).toBe("E");
+           expect(removeDiacritics("Î")).toBe("I");
+           expect(removeDiacritics("Ï")).toBe("I");
+           expect(removeDiacritics("Ô")).toBe("O");
+           expect(removeDiacritics("Ù")).toBe("U");
+           expect(removeDiacritics("Û")).toBe("U");
+           expect(removeDiacritics("Ü")).toBe("U");
+           expect(removeDiacritics("Ç")).toBe("C");
+           expect(removeDiacritics("àáã")).toBe("aaa");
+           expect(removeDiacritics("àáãâ èéêë")).toBe("aaaa eeee");
+           expect(removeDiacritics("ÀÁÃÂ ÈÉÊË")).toBe("AAAA EEEE");
         });
 
     });
