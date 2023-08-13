@@ -3,6 +3,7 @@ import {
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
+    isWhiteSpace,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -586,6 +587,34 @@ describe("TextUtil", () => {
             expect(isLetterOrNumber("a")).toBe(true);
             expect(isLetterOrNumber("b")).toBe(true);
             expect(isLetterOrNumber("c")).toBe(true);
+        });
+    });
+
+    describe("isWhiteSpace", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isWhiteSpace(null)).toBe(false);
+            expect(isWhiteSpace(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isWhiteSpace("")).toBe(false);
+        });
+
+        it("should return false for non-whitespace string", () => {
+            expect(isWhiteSpace("hello")).toBe(false);
+            expect(isWhiteSpace(" hello")).toBe(false);
+            expect(isWhiteSpace("hello ")).toBe(false);
+            expect(isWhiteSpace(" hello ")).toBe(false);
+        });
+
+        it("should return true for whitespace string", () => {
+            expect(isWhiteSpace(" ")).toBe(true);
+            expect(isWhiteSpace("\t")).toBe(true);
+            expect(isWhiteSpace("\n")).toBe(true);
+            expect(isWhiteSpace("\r\n")).toBe(true);
+            expect(isWhiteSpace("\f")).toBe(true);
+            expect(isWhiteSpace("\v")).toBe(true);
         });
     });
 

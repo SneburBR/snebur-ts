@@ -163,32 +163,42 @@ export function isNullOrWhiteSpace(text: string): boolean {
 
 /**
  * Determines whether the given text is a single letter (a-z or A-Z).
- * @param text The text to check.
+ * @param char The string to check.
  * @returns True if the text is a single letter, false otherwise.
  */
-export function isLetter(text: string): boolean {
-    if(isNullOrEmpty(text)) return false;
-    return text.length === 1 && text.match(/[a-z]/i) !== null;
+export function isLetter(char: string): boolean {
+    if(isNullOrEmpty(char)) return false;
+    return char.length === 1 && char.match(/[a-z]/i) !== null;
 }
 
 /**
  * Determines whether a given string is a single digit number.
- * @param text The string to check.
+ * @param char The string to check.
  * @returns True if the string is a single digit number, false otherwise.
  */
-export function isNumber(text: string): boolean {
-    if(isNullOrEmpty(text)) return false;
-    return text.length === 1 && text.match(/[0-9]/i) !== null;
+export function isNumber(char: string): boolean {
+    if(isNullOrEmpty(char)) return false;
+    return char.length === 1 && char.match(/[0-9]/i) !== null;
 }
 
 /**
  * Checks if a given string is a letter or a number.
- * @param text - The string to check.
+ * @param char - The string to check.
  * @returns True if the string is a letter or a number, false otherwise.
  */
-export function isLetterOrNumber(text: string): boolean {
-    if(isNullOrEmpty(text)) return false;
-    return text.length === 1 && text.match(/[a-z0-9]/i) !== null;
+export function isLetterOrNumber(char: string): boolean {
+    if(isNullOrEmpty(char)) return false;
+    return char.length === 1 && char.match(/[a-z0-9]/i) !== null;
+}
+ 
+/**
+ * Determines if the given text is whitespace.
+ * @param char The string to check.
+ * @returns True if the text is whitespace, false otherwise.
+ */
+export function isWhiteSpace(char: string): boolean {
+    return char === " " || char === "\t" ||  char === "\n" || char === "\r" ||  char === "\r\n" ||
+    char === "\f" ||  char === "\v";
 }
 
 /**
