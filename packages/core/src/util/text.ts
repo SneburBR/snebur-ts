@@ -397,6 +397,16 @@ export function removeWhiteSpace(value: string, replaceValue: string = ""): stri
 }
 
 /**
+ * Removes double white spaces from a given string.
+ * @param text - The input string to remove double white spaces from.
+ * @returns The input string with double white spaces removed.
+ */
+export function removeDoubleWhiteSpace(text: string): string {
+    if (text == null || text.length === 0) return "";
+    return text.replace(/\s{2,}/g, " ");
+}
+
+/**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.
  * @param separator The separator to use between each string. Defaults to an empty string.
