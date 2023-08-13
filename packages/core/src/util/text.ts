@@ -267,6 +267,12 @@ export function isLowerCase(text: string): boolean {
     return text === text.toLowerCase();
 }
 
+export function isCapitalized(text: string): boolean {
+    if (isNullOrWhiteSpace(text)) return false;
+    if(text.length === 1) return isUpperCase(text);
+    return isUpperCase(text[0]) && isLowerCase(text.substring(1));
+}
+
 /**
  * Concatenates an array of strings into a single string, using the specified separator and end separator.
  * @param parts An array of strings to concatenate.

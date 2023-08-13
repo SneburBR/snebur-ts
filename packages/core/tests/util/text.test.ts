@@ -4,7 +4,7 @@ import {
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
     isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
-    isUpperCase, isLowerCase,
+    isUpperCase, isLowerCase, isCapitalized,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -879,6 +879,41 @@ describe("TextUtil", () => {
             expect(isLowerCase("aaaa")).toBe(true);
             expect(isLowerCase("aaaa bbb")).toBe(true);
         });
+
+    });
+
+    describe("isCapitalized", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isCapitalized(null)).toBe(false);
+            expect(isCapitalized(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isCapitalized("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+            expect(isCapitalized(" ")).toBe(false);
+            expect(isCapitalized("  ")).toBe(false);
+            expect(isCapitalized(" \t ")).toBe(false);
+            expect(isCapitalized(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-capitalized string", () => {
+            expect(isCapitalized("a")).toBe(false);
+            // expect(isCapitalized("Aa")).toBe(false);
+            expect(isCapitalized("aaaaa")).toBe(false);
+            expect(isCapitalized("aaaaa bbbbb")).toBe(false);
+        });
+
+        it("should return true for capitalized string", () => {
+            expect(isCapitalized("A")).toBe(true);
+            expect(isCapitalized("Aa")).toBe(true);
+            expect(isCapitalized("Aaaa")).toBe(true);
+            expect(isCapitalized("Aaaa bbbbb")).toBe(true);
+        });
+
 
     });
 
