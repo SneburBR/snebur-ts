@@ -218,7 +218,7 @@ export function isStartsWithNumber(value: string): boolean {
  * @returns True if the string contains only letters, false otherwise.
  */
 export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
-    if (isNullOrWhiteSpace(text)) return false;
+    if (text == null || text.length === 0) return false;
     const regex = getRegexToTest(RegexOnlyInternal.Letters, specialCharsCategory);
     return regex.test(text);
 }
@@ -230,7 +230,20 @@ export function isOnlyLetters(text: string, specialCharsCategory: SpecialCharsOp
  * @returns `true` if the string contains only numeric characters, `false` otherwise.
  */
 export function isOnlyNumbers(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
+    if (text == null || text.length === 0) return false;
     const regex = getRegexToTest(RegexOnlyInternal.Numbers, specialCharsCategory);
+    return regex.test(text);
+}
+
+/**
+ * Checks if a string contains only letters and numbers.
+ * @param text - The string to check.
+ * @param specialCharsCategory - An optional parameter to allow additional special characters.
+ * @returns True if the string contains only letters and numbers, false otherwise.
+ */
+export function isOnlyLettersAndNumbers(text: string, specialCharsCategory: SpecialCharsOptions = SpecialCharsOptions.None): boolean {
+    if (text == null || text.length === 0) return false;
+    const regex = getRegexToTest(RegexOnlyInternal.LettersAndNumbers, specialCharsCategory);
     return regex.test(text);
 }
 

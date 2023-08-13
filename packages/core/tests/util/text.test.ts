@@ -3,7 +3,7 @@ import {
     countWords, countOccurrences, getLines, getWords, getOccurrences,
     getOnlyNumbers, getOnlyLetters, getOnlyLettersAndNumbers,
     isNullOrEmpty, isNullOrWhiteSpace, isLetter, isNumber, isLetterOrNumber,
-    isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers,
+    isWhiteSpace, isStartsWithNumber, isOnlyLetters, isOnlyNumbers, isOnlyLettersAndNumbers,
     SpecialCharsOptions,
 
 } from "../../src/util/text";
@@ -745,7 +745,7 @@ describe("TextUtil", () => {
             expect(isOnlyNumbers("º  1234")).toBe(false);
         });
 
-        it("should return true for number string", () => {
+        it("should return true for numbers string", () => {
             expect(isOnlyNumbers("1234567890")).toBe(true);
             expect(isOnlyNumbers("12345 67890", SpecialCharsOptions.WhiteSpaces)).toBe(true);
             expect(isOnlyNumbers("12345.67890", SpecialCharsOptions.Punctuations)).toBe(true);
@@ -753,6 +753,62 @@ describe("TextUtil", () => {
             expect(isOnlyNumbers("12345, \r\n67890?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
         });
     });
-    
+
+    describe("isOnlyLettersAndNumbers", () => {
+
+        it("should return false for null or undefined", () => {
+            expect(isOnlyLettersAndNumbers(null)).toBe(false);
+            expect(isOnlyLettersAndNumbers(undefined)).toBe(false);
+        });
+
+        it("should return false for empty string", () => {
+            expect(isOnlyLettersAndNumbers("")).toBe(false);
+        });
+
+        it("should return false for whitespace string", () => {
+
+            expect(isOnlyLettersAndNumbers(" ")).toBe(false);
+            expect(isOnlyLettersAndNumbers("  ")).toBe(false);
+            expect(isOnlyLettersAndNumbers(" \t ")).toBe(false);
+            expect(isOnlyLettersAndNumbers(" \t \n ")).toBe(false);
+        });
+
+        it("should return false for non-number string", () => {
+            expect(isOnlyLettersAndNumbers("%")).toBe(false);
+            expect(isOnlyLettersAndNumbers("2  hello 1234")).toBe(false);
+            expect(isOnlyLettersAndNumbers("1%  1234")).toBe(false);
+            expect(isOnlyLettersAndNumbers(" 1234 1&")).toBe(false);
+            expect(isOnlyLettersAndNumbers(" 1234 1´")).toBe(false);
+            expect(isOnlyLettersAndNumbers(" 1234 1º")).toBe(false);
+            expect(isOnlyLettersAndNumbers("%  1234")).toBe(false);
+            expect(isOnlyLettersAndNumbers("&  1234")).toBe(false);
+            expect(isOnlyLettersAndNumbers("´  1234")).toBe(false);
+            expect(isOnlyLettersAndNumbers("º  1234")).toBe(false);
+        });
+
+        it("should return true for numbers string", () => {
+            expect(isOnlyLettersAndNumbers("1234567890")).toBe(true);
+            expect(isOnlyLettersAndNumbers("12345 67890", SpecialCharsOptions.WhiteSpaces)).toBe(true);
+            expect(isOnlyLettersAndNumbers("12345.67890", SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("12345 67890.", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("12345, \r\n67890?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+        });
+
+        it("should return true for letters string and special chars ", () => {
+            expect(isOnlyLettersAndNumbers("Hello World", SpecialCharsOptions.WhiteSpaces)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello.World", SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello World.", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello World, world!\r\n world?", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+        });
+
+        it("should return true for letters and numbers string and special chars ", () => {
+
+            expect(isOnlyLettersAndNumbers("Hello World 123", SpecialCharsOptions.WhiteSpaces)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello.World,123", SpecialCharsOptions.Punctuations)).toBe(true);
+            expect(isOnlyLettersAndNumbers("Hello World. 123", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+             expect(isOnlyLettersAndNumbers("Hello World, world!\r\n world? 123", SpecialCharsOptions.WhiteSpaces | SpecialCharsOptions.Punctuations)).toBe(true);
+        });
+    });
+
 
 });
