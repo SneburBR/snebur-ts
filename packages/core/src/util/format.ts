@@ -2,6 +2,7 @@ import { isNullOrEmpty, getOnlyNumbers } from "./text";
 
 export enum FormattingType {
     Cpf,
+    Cnpj,
 }
 
 /**
@@ -18,19 +19,37 @@ export function format(value: string | number, type: FormattingType): string {
     switch (type) {
         case FormattingType.Cpf:
             return formatCpf(value);
+        case FormattingType.Cnpj:
+            return formatCnpj(value);
         default:
             throw new Error(`Formatting type ${type} not suppoerted`);
 
     }
 }
 
+/**
+ * Formats a Brazilian CPF (Cadastro de Pessoas Físicas) number by adding a mask.
+ * @param value - The CPF number to be formatted. Can be a string or a number.
+ * @returns The formatted CPF number as a string.
+ */
 export function formatCpf(value: string | number): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
     return formatMask(value, "###.###.###-##");
-
-    // return `${numbers.substr(0, 3)}.${numbers.substr(3, 3)}.${numbers.substr(6, 3)}-${numbers.substr(9, 2)}`;
 }
+
+/**
+ * Formats a CNPJ (Brazilian company registration number) string or number into the format ##.###.###/####-##.
+ * @param value The CNPJ value to be formatted.
+ * @returns The formatted CNPJ string.
+ */
+export function formatCnpj(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    return formatMask(value, "##.###.###/####-##");
+}
+
+
 
 function formatMask(value: string | number, mask: string) {
 
