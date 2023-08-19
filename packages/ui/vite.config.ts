@@ -3,7 +3,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     build: {
-        target: "es2015",
+        target: "es2022",
         lib: {
             entry: [
                 "src/index.ts"
