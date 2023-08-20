@@ -1,4 +1,4 @@
-import { normalizeNumber } from "./normalize";
+import { normalizeNumber, normalizeDate } from "./normalize";
 import { isNullOrEmpty, getOnlyNumbers, countOccurrences } from "./text";
 
 export enum FormattingType {
@@ -16,6 +16,7 @@ export enum FormattingType {
     Integer = "integer",
     Margin = "margin",
     Money = "money",
+    None = "none",
     MoneyWithPositiveSign = "moneywithpositivesign",
     Percent = "percent",
     Phone = "phone",
@@ -29,9 +30,13 @@ export enum FormattingType {
  * @returns The formatted string.
  * @throws An error if the specified formatting type is not supported.
  */
-export function format(value: string | number, type: FormattingType | string): string {
+export function format(value: string | number | Date, type: FormattingType | string): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
+
+    if (value instanceof Date) {
+        return formatDate(value);
+    }
 
     switch (type) {
         case FormattingType.Bytes:
@@ -44,6 +49,8 @@ export function format(value: string | number, type: FormattingType | string): s
             return formatCpf(value);
         case FormattingType.CpfCnpj:
             return formatCpfCnpj(value);
+        case FormattingType.Date:
+            return formatDate(value);
         case FormattingType.Money:
             return formatMoney(value);
         case FormattingType.MoneyWithPositiveSign:
@@ -66,13 +73,13 @@ export function formatBytes(value: string | number): string {
     const number = normalizeNumber(value);
     const bytes = parseFloat(number);
 
-    if(bytes < 1024) return `${bytes.toFixed(0)} bytes`;
+    if (bytes < 1024) return `${bytes.toFixed(0)} bytes`;
     const kilobytes = bytes / 1024;
 
-    if(kilobytes < 1024) return `${kilobytes.toFixed(1)} KB`;
+    if (kilobytes < 1024) return `${kilobytes.toFixed(1)} KB`;
 
     const megabytes = kilobytes / 1024;
-    if(megabytes < 1024) return `${megabytes.toFixed(1)} MB`;
+    if (megabytes < 1024) return `${megabytes.toFixed(1)} MB`;
 
     const gigabytes = megabytes / 1024;
     if (gigabytes < 1024) return `${gigabytes.toFixed(1)} GB`;
@@ -128,6 +135,27 @@ export function formatCpfCnpj(value: string | number): string {
         return formatCpf(numbers);
 
     return formatCnpj(numbers);
+}
+
+/**
+ * Formats a date value as a string in the format "MM/DD/YYYY".
+ * @param value - The date value to format. Can be a string, number, or Date object.
+ * @returns A string representation of the date value in the format "MM/DD/YYYY".
+ */
+export function formatDate(value: string | number | Date): string {
+
+    if (value instanceof Date) {
+        return value.toLocaleDateString();
+    }
+
+    if (typeof value === "number") {
+        return new Date(value).toLocaleDateString();
+    }
+
+    if (isNullOrEmpty(value?.toString())) return "";
+
+    const date = normalizeDate(value, true);
+    return formatMask(date, "##/##/####");
 }
 
 /**
@@ -208,6 +236,26 @@ export function formatPhone(value: string | number): string {
         return formatMask(value, "(##) ####-####");
 
     return formatMask(value, "(##) #####-####");
+}
+
+/**
+ * Pads a string or number with leading zeros until it reaches the specified length.
+ * If the input value is null, undefined, or an empty string, an empty string is returned.
+ * If the specified length is less than or equal to zero, the input value is returned as a string.
+ * @param value - The string or number to pad with leading zeros.
+ * @param length - The desired length of the resulting string.
+ * @returns A string with leading zeros, or an empty string if the input value is null, undefined, or an empty string.
+ */
+export function formatZeroPad(value: string | number, length: number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    if (length <= 0) return value.toString();
+
+    const numbers = getOnlyNumbers(value.toString());
+    if (numbers.length >= length)
+        return numbers;
+
+    return numbers.padStart(length, "0");
 }
 
 
