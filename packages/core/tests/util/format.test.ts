@@ -7,7 +7,56 @@ import { removeWhiteSpace } from "../../src/util/text";
 
 describe("FormatUtil", () => {
 
+    describe("format", () => {
 
+        it("should be empty", () => {
+            expect(format("", FormattingType.Cep)).toBe("");
+            expect(format(null, FormattingType.Cep)).toBe("");
+            expect(format(undefined, FormattingType.Cep)).toBe("");
+        });
+
+        it("should format bytes", () => {
+            expect(format("0", FormattingType.Bytes)).toBe("0 bytes");
+            expect(format("1", FormattingType.Bytes)).toBe("1 bytes");
+            expect(format("1023", FormattingType.Bytes)).toBe("1023 bytes");
+            expect(format("1024", FormattingType.Bytes)).toBe("1.0 KB");
+        });
+
+        it("should format cep", () => {
+            expect(format("12345678", FormattingType.Cep)).toBe("12.345-678");
+        });
+
+        it("should format cpf", () => {
+            expect(format("12345678901", FormattingType.Cpf)).toBe("123.456.789-01");
+        });
+
+        it("should format cnpj", () => {
+            expect(format("12345678901234", FormattingType.Cnpj)).toBe("12.345.678/9012-34");
+        });
+
+        it("should format cpf/cnpj", () => {
+            expect(format("12345678901", FormattingType.CpfCnpj)).toBe("123.456.789-01");
+            expect(format("12345678901234", FormattingType.CpfCnpj)).toBe("12.345.678/9012-34");
+        });
+
+        it("should format phone", () => {
+            expect(format("1234567890", FormattingType.Phone)).toBe("(12) 3456-7890");
+            expect(format("12345678901", FormattingType.Phone)).toBe("(12) 34567-8901");
+        });
+
+        it("should format money", () => {
+            expect(removeWhiteSpace(format("1234,194", FormattingType.Money))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+            expect(removeWhiteSpace(format("1234,195", FormattingType.Money))).toBe(removeWhiteSpace(`R$ 1.234,20`));
+            expect(removeWhiteSpace(format("-1234,195", FormattingType.Money))).toBe(removeWhiteSpace(`-R$ 1.234,20`));
+        });
+
+        it("should format money with positive sign", () => {
+            expect(removeWhiteSpace(format("1234,194", FormattingType.MoneyWithPositiveSign))).toBe(removeWhiteSpace(`+R$ 1.234,19`));
+            expect(removeWhiteSpace(format("1234,195", FormattingType.MoneyWithPositiveSign))).toBe(removeWhiteSpace(`+R$ 1.234,20`));
+            expect(removeWhiteSpace(format("-1234,195", FormattingType.MoneyWithPositiveSign))).toBe(removeWhiteSpace(`-R$ 1.234,20`));
+        });
+        
+    });
 
     describe("formatBytes", () => {
 
