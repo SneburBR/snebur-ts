@@ -41,6 +41,8 @@ export function format(value: string | number, type: FormattingType): string {
             return formatCpfCnpj(value);
         case FormattingType.Cep:
             return formatCep(value);
+        case FormattingType.Phone:
+            return formatPhone(value);
         default:
             throw new Error(`Formatting type ${type} not suppoerted`);
 
@@ -95,6 +97,22 @@ export function formatCep(value: string | number): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
     return formatMask(value, "##.###-###");
+}
+
+/**
+ * Formats a phone number string or number to a Brazilian phone number format.
+ * @param value - The phone number to be formatted.
+ * @returns The formatted phone number string.
+ */
+export function formatPhone(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    const numbers = getOnlyNumbers(value.toString());
+
+    if (numbers.length <= 10)
+        return formatMask(value, "(##) ####-####");
+
+    return formatMask(value, "(##) #####-####");
 }
 
 function formatMask(value: string | number, mask: string) {

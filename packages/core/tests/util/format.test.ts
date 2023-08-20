@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     FormattingType, format, formatCpf, formatCnpj, formatCpfCnpj,
-    formatCep
+    formatCep, formatPhone
 } from "../../src/util/format";
 
 describe("FormatUtil", () => {
@@ -15,7 +15,6 @@ describe("FormatUtil", () => {
         });
 
         it("should format cpf", () => {
-
             expect(formatCpf(" 123 ")).toBe("123");
             expect(formatCpf("123")).toBe("123");
             expect(formatCpf("1234")).toBe("123.4");
@@ -44,7 +43,6 @@ describe("FormatUtil", () => {
         });
 
         it("should format cnpj", () => {
-
             expect(formatCnpj(" 123 ")).toBe("12.3");
             expect(formatCnpj("123")).toBe("12.3");
             expect(formatCnpj("1234")).toBe("12.34");
@@ -76,7 +74,6 @@ describe("FormatUtil", () => {
         });
 
         it("should format cpf", () => {
-
             expect(formatCpfCnpj(" 123 ")).toBe("123");
             expect(formatCpfCnpj("123")).toBe("123");
             expect(formatCpfCnpj("1234")).toBe("123.4");
@@ -86,15 +83,16 @@ describe("FormatUtil", () => {
             expect(formatCpfCnpj("123456 78901")).toBe("123.456.789-01");
             expect(formatCpfCnpj("123.456.789-01")).toBe("123.456.789-01");
             expect(formatCpfCnpj("12345678901")).toBe("123.456.789-01");
+            expect(format("12345678901", FormattingType.CpfCnpj)).toBe("123.456.789-01");
         });
 
         it("should format cnpj", () => {
-
             expect(formatCpfCnpj("123456789012")).toBe("12.345.678/9012");
             expect(formatCpfCnpj("1234567890123")).toBe("12.345.678/9012-3");
             expect(formatCpfCnpj("12345678901234")).toBe("12.345.678/9012-34");
             expect(formatCpfCnpj("123456789012345")).toBe("12.345.678/9012-34");
             expect(formatCpfCnpj("12.345.678/9012-34")).toBe("12.345.678/9012-34");
+            expect(format("12345678901234", FormattingType.CpfCnpj)).toBe("12.345.678/9012-34");
         });
     });
 
@@ -107,7 +105,6 @@ describe("FormatUtil", () => {
         });
 
         it("should format cep", () => {
-
             expect(formatCep(" 123 ")).toBe("12.3");
             expect(formatCep("123")).toBe("12.3");
             expect(formatCep("1234")).toBe("12.34");
@@ -116,6 +113,31 @@ describe("FormatUtil", () => {
             expect(formatCep("1234567")).toBe("12.345-67");
             expect(formatCep("12345678")).toBe("12.345-678");
             expect(formatCep("123456789")).toBe("12.345-678");
+            expect(format("12345678", FormattingType.Cep)).toBe("12.345-678");
+        });
+    });
+
+    describe("formatPhone", () => {
+
+        it("should be empty", () => {
+            expect(formatPhone("")).toBe("");
+            expect(formatPhone(null)).toBe("");
+            expect(formatPhone(undefined)).toBe("");
+        });
+
+        it("should format phone", () => {
+            expect(formatPhone(" 123 ")).toBe("(12) 3");
+            expect(formatPhone("123")).toBe("(12) 3");
+            expect(formatPhone("1234")).toBe("(12) 34");
+            expect(formatPhone("12345")).toBe("(12) 345");
+            expect(formatPhone("123456")).toBe("(12) 3456");
+            expect(formatPhone("1234567")).toBe("(12) 3456-7");
+            expect(formatPhone("12345678")).toBe("(12) 3456-78");
+            expect(formatPhone("123456789")).toBe("(12) 3456-789");
+            expect(formatPhone("1234567890")).toBe("(12) 3456-7890");
+            expect(formatPhone("12345678901")).toBe("(12) 34567-8901");
+            expect(formatPhone("(12) 34567-8901")).toBe("(12) 34567-8901");
+            expect(format("12345678901", FormattingType.Phone)).toBe("(12) 34567-8901");
         });
     });
 
