@@ -3,7 +3,22 @@ import { isNullOrEmpty, getOnlyNumbers } from "./text";
 export enum FormattingType {
     Cpf,
     Cnpj,
-    CpfCnpj
+    CpfCnpj,
+    Cep,
+    Phone,
+    Money,
+    Percent,
+    Date,
+    DateTime,
+    Time,
+    Decimal,
+    Integer,
+    Bytes,
+    MoneyWithSignal,
+    Dimension,
+    Margin,
+    DimensionCm,
+    DimensionPixels,
 }
 
 /**
@@ -24,6 +39,8 @@ export function format(value: string | number, type: FormattingType): string {
             return formatCnpj(value);
         case FormattingType.CpfCnpj:
             return formatCpfCnpj(value);
+        case FormattingType.Cep:
+            return formatCep(value);
         default:
             throw new Error(`Formatting type ${type} not suppoerted`);
 
@@ -64,10 +81,21 @@ export function formatCpfCnpj(value: string | number): string {
 
     if (numbers.toString().length <= 11)
         return formatCpf(numbers);
-    
+
     return formatCnpj(numbers);
 }
 
+
+/**
+ * Formats a Brazilian zip code (CEP) string or number to the format "#####-###".
+ * @param value The value to be formatted.
+ * @returns The formatted string.
+ */
+export function formatCep(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    return formatMask(value, "##.###-###");
+}
 
 function formatMask(value: string | number, mask: string) {
 
