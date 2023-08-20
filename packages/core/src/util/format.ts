@@ -2,24 +2,24 @@ import { normalizeNumber } from "./normalize";
 import { isNullOrEmpty, getOnlyNumbers } from "./text";
 
 export enum FormattingType {
-    Cpf,
-    Cnpj,
-    CpfCnpj,
-    Cep,
-    Phone,
-    Money,
-    Percent,
-    Date,
-    DateTime,
-    Time,
-    Decimal,
-    Integer,
-    Bytes,
-    MoneyWithSignal,
-    Dimension,
-    Margin,
-    DimensionCm,
-    DimensionPixels,
+    Bytes = "bytes",
+    Cep = "cep",
+    Cnpj = "cnpj",
+    Cpf = "cpf",
+    CpfCnpj = "cpfcnpj",
+    Date = "date",
+    DateTime = "datetime",
+    Decimal = "decimal",
+    Dimension = "dimension",
+    DimensionCm = "dimensioncm",
+    DimensionPixels = "dimensionpixels",
+    Integer = "integer",
+    Margin = "margin",
+    Money = "money",
+    MoneyWithPositiveSign = "moneywithpositivesign",
+    Percent = "percent",
+    Phone = "phone",
+    Time = "time",
 }
 
 /**
@@ -29,26 +29,27 @@ export enum FormattingType {
  * @returns The formatted string.
  * @throws An error if the specified formatting type is not supported.
  */
-export function format(value: string | number, type: FormattingType): string {
+export function format(value: string | number, type: FormattingType | string): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
 
     switch (type) {
-        case FormattingType.Cpf:
-            return formatCpf(value);
-        case FormattingType.Cnpj:
-            return formatCnpj(value);
-        case FormattingType.CpfCnpj:
-            return formatCpfCnpj(value);
         case FormattingType.Cep:
             return formatCep(value);
-        case FormattingType.Phone:
-            return formatPhone(value);
+        case FormattingType.Cnpj:
+            return formatCnpj(value);
+        case FormattingType.Cpf:
+            return formatCpf(value);
+        case FormattingType.CpfCnpj:
+            return formatCpfCnpj(value);
         case FormattingType.Money:
             return formatMoney(value);
+        case FormattingType.MoneyWithPositiveSign:
+            return formatMoneyWithPositiveSign(value);
+        case FormattingType.Phone:
+            return formatPhone(value);
         default:
-            throw new Error(`Formatting type ${type} not suppoerted`);
-
+            throw new Error(`Formatting type ${type} not supported`);
     }
 }
 
@@ -89,7 +90,7 @@ export function formatCpfCnpj(value: string | number): string {
 
     return formatCnpj(numbers);
 }
- 
+
 /**
  * Formats a Brazilian zip code (CEP) string or number to the format "#####-###".
  * @param value The value to be formatted.
@@ -125,23 +126,17 @@ export function formatPhone(value: string | number): string {
  * @throws An error if the money value is invalid.
  */
 export function formatMoney(value: string | number, options?: Intl.NumberFormatOptions): string {
+    return formatMoneyInternal(value, false, options);
+}
 
-    if (isNullOrEmpty(value?.toString())) return "";
-
-    const number = Number(normalizeNumber(value));
-    if (isNaN(number))
-        throw new Error(`Money value ${value} is invalid`);
-
-    if (options == null) {
-        options = {
-            style: "currency",
-            currency: "BRL",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        };
-    }
-
-    return number.toLocaleString("pt-BR", options);
+/**
+ * Formats a number as a currency string with a positive sign.
+ * @param value - The number to format.
+ * @param options - The options to use when formatting the number.
+ * @returns The formatted currency string with a positive sign.
+ */
+export function formatMoneyWithPositiveSign(value: string | number, options?: Intl.NumberFormatOptions): string {
+    return formatMoneyInternal(value, true, options);
 }
 
 function formatMask(value: string | number, mask: string) {
@@ -161,5 +156,29 @@ function formatMask(value: string | number, mask: string) {
             result += mask[i];
         }
     }
+    return result;
+}
+
+function formatMoneyInternal(value: string | number, isAddPositiveSign: boolean, options?: Intl.NumberFormatOptions): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+
+    const number = Number(normalizeNumber(value));
+    if (isNaN(number))
+        throw new Error(`Money value ${value} is invalid`);
+
+    if (options == null) {
+        options = {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        };
+    }
+
+    const result = number.toLocaleString("pt-BR", options);
+    if (isAddPositiveSign && number > 0)
+        return `+${result}`;
+
     return result;
 }

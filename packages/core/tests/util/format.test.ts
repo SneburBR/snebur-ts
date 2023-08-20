@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     FormattingType, format, formatCpf, formatCnpj, formatCpfCnpj,
-    formatCep, formatPhone, formatMoney
+    formatCep, formatPhone, formatMoney, formatMoneyWithPositiveSign
 } from "../../src/util/format";
 import { removeWhiteSpace } from "../../src/util/text";
 
@@ -152,12 +152,40 @@ describe("FormatUtil", () => {
 
         it("should format money", () => {
             expect(removeWhiteSpace(formatMoney("1234"))).toBe(removeWhiteSpace(`R$ 1.234,00`));
-            expect(removeWhiteSpace(formatMoney("1234.111"))).toBe(removeWhiteSpace(`R$ 1.234,11`));
+            expect(removeWhiteSpace(formatMoney(1234))).toBe(removeWhiteSpace(`R$ 1.234,00`));
+            expect(removeWhiteSpace(formatMoney(1234.111))).toBe(removeWhiteSpace(`R$ 1.234,11`));
             expect(removeWhiteSpace(formatMoney("1234,111"))).toBe(removeWhiteSpace(`R$ 1.234,11`));
             expect(removeWhiteSpace(formatMoney("1234.195"))).toBe(removeWhiteSpace(`R$ 1.234,20`));
             expect(removeWhiteSpace(formatMoney("1234.194"))).toBe(removeWhiteSpace(`R$ 1.234,19`));
             expect(removeWhiteSpace(formatMoney("1234,195"))).toBe(removeWhiteSpace(`R$ 1.234,20`));
             expect(removeWhiteSpace(formatMoney("1234,194"))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoney("-1234,194"))).toBe(removeWhiteSpace(`-R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoney("1234,194"))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoney(1234.194))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+            expect(removeWhiteSpace(format("1234,194", FormattingType.Money))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+        });
+    });
+
+    describe("formatMoneyWithPositiveSign", () => {
+
+        it("should be empty", () => {
+            expect(formatMoneyWithPositiveSign("")).toBe("");
+            expect(formatMoneyWithPositiveSign(null)).toBe("");
+            expect(formatMoneyWithPositiveSign(undefined)).toBe("");
+        });
+
+        it("should format money with positive sign ", () => {
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234"))).toBe(removeWhiteSpace(`+R$ 1.234,00`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign(1234))).toBe(removeWhiteSpace(`+R$ 1.234,00`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234.111"))).toBe(removeWhiteSpace(`+R$ 1.234,11`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234,111"))).toBe(removeWhiteSpace(`+R$ 1.234,11`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234.195"))).toBe(removeWhiteSpace(`+R$ 1.234,20`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234.194"))).toBe(removeWhiteSpace(`+R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234,195"))).toBe(removeWhiteSpace(`+R$ 1.234,20`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234,194"))).toBe(removeWhiteSpace(`+R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("-1234,194"))).toBe(removeWhiteSpace(`-R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign("1234,194"))).toBe(removeWhiteSpace(`+R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoneyWithPositiveSign(1234.194))).toBe(removeWhiteSpace(`+R$ 1.234,19`));
         });
     });
 
