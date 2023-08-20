@@ -3,6 +3,7 @@ import { isNullOrEmpty, getOnlyNumbers } from "./text";
 export enum FormattingType {
     Cpf,
     Cnpj,
+    CpfCnpj
 }
 
 /**
@@ -21,6 +22,8 @@ export function format(value: string | number, type: FormattingType): string {
             return formatCpf(value);
         case FormattingType.Cnpj:
             return formatCnpj(value);
+        case FormattingType.CpfCnpj:
+            return formatCpfCnpj(value);
         default:
             throw new Error(`Formatting type ${type} not suppoerted`);
 
@@ -49,6 +52,21 @@ export function formatCnpj(value: string | number): string {
     return formatMask(value, "##.###.###/####-##");
 }
 
+/**
+ * Formats a Brazilian CPF or CNPJ number.
+ * @param value The CPF or CNPJ number to be formatted.
+ * @returns The formatted CPF or CNPJ number.
+ */
+export function formatCpfCnpj(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    const numbers = getOnlyNumbers(value.toString());
+
+    if (numbers.toString().length <= 11)
+        return formatCpf(numbers);
+    
+    return formatCnpj(numbers);
+}
 
 
 function formatMask(value: string | number, mask: string) {
