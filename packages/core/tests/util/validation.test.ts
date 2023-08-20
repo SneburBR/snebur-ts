@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isString, isValidNumber } from "@snebur/core/src/util/validation";
+import { isString, isValidNumber } from "../../src/util/validation";
 
 describe("validation", () => {
 
