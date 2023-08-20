@@ -28,10 +28,8 @@ export function normalizeNumber(number: number | string): string {
 export function normalizeDate(value: string | Date, isFormatZero:boolean = false): string {
 
     if (value instanceof Date) {
-
-        if(isFormatZero){
-            return value.toLocaleDateString();
-        }
+        if(isFormatZero)
+            return `${formatNumberInternal(value.getDate())}/${formatNumberInternal(value.getMonth() + 1)}/${value.getFullYear()}`;
         return `${value.getDate()}/${value.getMonth() + 1}/${value.getFullYear()}`;
     }
         
