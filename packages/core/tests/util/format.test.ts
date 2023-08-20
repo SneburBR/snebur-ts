@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     FormattingType, format, formatCpf, formatCnpj, formatCpfCnpj,
-    formatCep, formatPhone, formatMoney, formatMoneyWithPositiveSign
+    formatCep, formatMask, formatMoney, formatMoneyWithPositiveSign, formatPhone,
 } from "../../src/util/format";
 import { removeWhiteSpace } from "../../src/util/text";
 
@@ -140,6 +140,33 @@ describe("FormatUtil", () => {
             expect(formatPhone("(12) 34567-8901")).toBe("(12) 34567-8901");
             expect(format("12345678901", FormattingType.Phone)).toBe("(12) 34567-8901");
         });
+    });
+
+    describe("formatMask", () => {
+
+        it("should be empty", () => {
+            expect(formatMask("", "##.##")).toBe("");
+            expect(formatMask(null, "##.##")).toBe("");
+            expect(formatMask(undefined, "##.##")).toBe("");
+        });
+
+        it("should throw error", () => {
+            expect(() => formatMask("123", null)).toThrow();
+        });
+
+        it("should format mask", () => {
+            expect(formatMask("123", "##.##")).toBe("12.3");
+            expect(formatMask("1234", "##.(##.)-", true)).toBe("12.(34.)-");
+            expect(formatMask("1234", "##.##.", true)).toBe("12.34.");
+            expect(formatMask("1234", "+##.##-", true)).toBe("+12.34-");
+            expect(formatMask("123", "##.##-", true)).toBe("12.3");
+            expect(formatMask("12345", "##.##")).toBe("12.34");
+            expect(formatMask("123", "##-##")).toBe("12-3");
+            expect(formatMask("1234", "##-##")).toBe("12-34");
+            expect(formatMask("123", "(##)-(##)")).toBe("(12)-(3");
+            expect(formatMask("1234", "(##)-(##)")).toBe("(12)-(34)");
+        });
+
     });
 
     describe("formatMoney", () => {

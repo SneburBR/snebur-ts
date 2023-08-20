@@ -1,5 +1,5 @@
 import { normalizeNumber } from "./normalize";
-import { isNullOrEmpty, getOnlyNumbers } from "./text";
+import { isNullOrEmpty, getOnlyNumbers, countOccurrences } from "./text";
 
 export enum FormattingType {
     Bytes = "bytes",
@@ -54,14 +54,14 @@ export function format(value: string | number, type: FormattingType | string): s
 }
 
 /**
- * Formats a Brazilian CPF (Cadastro de Pessoas Físicas) number by adding a mask.
- * @param value - The CPF number to be formatted. Can be a string or a number.
- * @returns The formatted CPF number as a string.
+ * Formats a Brazilian zip code (CEP) string or number to the format "#####-###".
+ * @param value The value to be formatted.
+ * @returns The formatted string.
  */
-export function formatCpf(value: string | number): string {
+export function formatCep(value: string | number): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
-    return formatMask(value, "###.###.###-##");
+    return formatMask(value, "##.###-###");
 }
 
 /**
@@ -73,6 +73,17 @@ export function formatCnpj(value: string | number): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
     return formatMask(value, "##.###.###/####-##");
+}
+
+/**
+ * Formats a Brazilian CPF (Cadastro de Pessoas Físicas) number by adding a mask.
+ * @param value - The CPF number to be formatted. Can be a string or a number.
+ * @returns The formatted CPF number as a string.
+ */
+export function formatCpf(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    return formatMask(value, "###.###.###-##");
 }
 
 /**
@@ -92,30 +103,46 @@ export function formatCpfCnpj(value: string | number): string {
 }
 
 /**
- * Formats a Brazilian zip code (CEP) string or number to the format "#####-###".
- * @param value The value to be formatted.
+ * Formats a string or number value using a given mask.
+ * @param value The value to format.
+ * @param mask The mask to use for formatting.
  * @returns The formatted string.
  */
-export function formatCep(value: string | number): string {
+export function formatMask(value: string | number, mask: string, isDebug: boolean = false) {
 
     if (isNullOrEmpty(value?.toString())) return "";
-    return formatMask(value, "##.###-###");
-}
+    if (isNullOrEmpty(mask))
+        throw new Error("Mask cannot be null or empty");
 
-/**
- * Formats a phone number string or number to a Brazilian phone number format.
- * @param value - The phone number to be formatted.
- * @returns The formatted phone number string.
- */
-export function formatPhone(value: string | number): string {
-
-    if (isNullOrEmpty(value?.toString())) return "";
     const numbers = getOnlyNumbers(value.toString());
+    const countMaskMark = countOccurrences(mask, "#");
 
-    if (numbers.length <= 10)
-        return formatMask(value, "(##) ####-####");
+    let result = "";
+    let valueIndex = 0;
+    const isIncomplete = numbers.length < countMaskMark;
 
-    return formatMask(value, "(##) #####-####");
+    if (isDebug)
+        console.log("isIncomplete", isIncomplete);
+
+    for (let i = 0; i < mask.length; i++) {
+
+        if (isIncomplete)
+            if (valueIndex >= numbers.length)
+                break;
+
+        if (mask[i] === "#") {
+
+            if (valueIndex >= numbers.length)
+                break;
+
+            result += numbers[valueIndex];
+            valueIndex++;
+        }
+        else {
+            result += mask[i];
+        }
+    }
+    return result;
 }
 
 /**
@@ -139,25 +166,24 @@ export function formatMoneyWithPositiveSign(value: string | number, options?: In
     return formatMoneyInternal(value, true, options);
 }
 
-function formatMask(value: string | number, mask: string) {
+/**
+ * Formats a phone number string or number to a Brazilian phone number format.
+ * @param value - The phone number to be formatted.
+ * @returns The formatted phone number string.
+ */
+export function formatPhone(value: string | number): string {
 
+    if (isNullOrEmpty(value?.toString())) return "";
     const numbers = getOnlyNumbers(value.toString());
-    let result = "";
-    let valueIndex = 0;
-    for (let i = 0; i < mask.length; i++) {
 
-        if (valueIndex >= numbers.length)
-            break;
-        if (mask[i] === "#") {
-            result += numbers[valueIndex];
-            valueIndex++;
-        }
-        else {
-            result += mask[i];
-        }
-    }
-    return result;
+    if (numbers.length <= 10)
+        return formatMask(value, "(##) ####-####");
+
+    return formatMask(value, "(##) #####-####");
 }
+
+
+//#region Internal
 
 function formatMoneyInternal(value: string | number, isAddPositiveSign: boolean, options?: Intl.NumberFormatOptions): string {
 
@@ -182,3 +208,5 @@ function formatMoneyInternal(value: string | number, isAddPositiveSign: boolean,
 
     return result;
 }
+
+//#endregion
