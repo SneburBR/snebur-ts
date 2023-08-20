@@ -1,5 +1,3 @@
-
-
 /**
  * Concatenates multiple strings into a single string.
  * @param parts The strings to concatenate.
@@ -158,7 +156,7 @@ export function isNullOrEmpty(text: string): boolean {
  * @returns True if the string is null, undefined, or consists only of whitespace characters; otherwise, false.
  */
 export function isNullOrWhiteSpace(text: string): boolean {
-    return text == null || text.trim() === "";
+    return text == null || typeof text === "string" && text.trim() === "";
 }
 
 /**
@@ -501,20 +499,16 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
     }
     return parts.join(separator);
 }
-
-
-
-
-
+ 
 /* eslint-disable no-unused-vars */
-const punctuation = ".,;:!?";
-const operators = `\\+\\-\\*\\/\\%=`;
-const brackets = "\\(\\)\\[\\]\\{\\}\\<\\>";
-const symbols = "~^\\/|@#$&";
-const quotes = "\"'`";
-const specialSymbols = "°ºª§";
-const underscore = "_";
-const pointCommaSigns = "\\+\\.\\,\\-";
+const Punctuation = ".,;:!?";
+const Operators = `\\+\\-\\*\\/\\%=`;
+const Brackets = "\\(\\)\\[\\]\\{\\}\\<\\>";
+const Symbols = "~^\\/|@#$&";
+const Quotes = "\"'`";
+const SpecialSymbols = "°ºª§";
+const Underscore = "_";
+const PointCommaSigns = "\\+\\.\\,\\-";
 
 /**
  * Options for including special characters in a regular expression pattern.
@@ -551,15 +545,15 @@ function getRegexTest(only: RegexOnlyInternal, options: SpecialCharsOptions): Re
 function getRegexInternal(only: string, options: SpecialCharsOptions): string {
     let regex = only;
     if (options & SpecialCharsOptions.WhiteSpaces) regex += "\\s";
-    if (options & SpecialCharsOptions.Punctuations) regex += punctuation;
-    if (options & SpecialCharsOptions.Operators) regex += operators;
-    if (options & SpecialCharsOptions.Brackets) regex += brackets;
-    if (options & SpecialCharsOptions.Symbols) regex += symbols;
-    if (options & SpecialCharsOptions.Quotes) regex += quotes;
-    if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
-    if (options & SpecialCharsOptions.Underscore) regex += underscore;
+    if (options & SpecialCharsOptions.Punctuations) regex += Punctuation;
+    if (options & SpecialCharsOptions.Operators) regex += Operators;
+    if (options & SpecialCharsOptions.Brackets) regex += Brackets;
+    if (options & SpecialCharsOptions.Symbols) regex += Symbols;
+    if (options & SpecialCharsOptions.Quotes) regex += Quotes;
+    if (options & SpecialCharsOptions.SpecialSymbols) regex += SpecialSymbols;
+    if (options & SpecialCharsOptions.Underscore) regex += Underscore;
     if (options & SpecialCharsOptions.Dash) regex += "-";
-    if (options & SpecialCharsOptions.PointCommaSigns) regex += pointCommaSigns;
+    if (options & SpecialCharsOptions.PointCommaSigns) regex += PointCommaSigns;
     return regex;
 }
 
