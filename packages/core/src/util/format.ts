@@ -1,3 +1,4 @@
+import { normalizeNumber } from "./normalize";
 import { isNullOrEmpty, getOnlyNumbers } from "./text";
 
 export enum FormattingType {
@@ -43,6 +44,8 @@ export function format(value: string | number, type: FormattingType): string {
             return formatCep(value);
         case FormattingType.Phone:
             return formatPhone(value);
+        case FormattingType.Money:
+            return formatMoney(value);
         default:
             throw new Error(`Formatting type ${type} not suppoerted`);
 
@@ -86,8 +89,7 @@ export function formatCpfCnpj(value: string | number): string {
 
     return formatCnpj(numbers);
 }
-
-
+ 
 /**
  * Formats a Brazilian zip code (CEP) string or number to the format "#####-###".
  * @param value The value to be formatted.
@@ -113,6 +115,33 @@ export function formatPhone(value: string | number): string {
         return formatMask(value, "(##) ####-####");
 
     return formatMask(value, "(##) #####-####");
+}
+
+/**
+ * Formats a money value as a string using the specified options.
+ * @param value The value to format as a string.
+ * @param options The options to use when formatting the value.
+ * @returns A string representation of the formatted money value.
+ * @throws An error if the money value is invalid.
+ */
+export function formatMoney(value: string | number, options?: Intl.NumberFormatOptions): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+
+    const number = Number(normalizeNumber(value));
+    if (isNaN(number))
+        throw new Error(`Money value ${value} is invalid`);
+
+    if (options == null) {
+        options = {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        };
+    }
+
+    return number.toLocaleString("pt-BR", options);
 }
 
 function formatMask(value: string | number, mask: string) {

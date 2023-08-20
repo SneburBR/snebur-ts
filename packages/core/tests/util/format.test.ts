@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
     FormattingType, format, formatCpf, formatCnpj, formatCpfCnpj,
-    formatCep, formatPhone
+    formatCep, formatPhone, formatMoney
 } from "../../src/util/format";
+import { removeWhiteSpace } from "../../src/util/text";
 
 describe("FormatUtil", () => {
 
@@ -138,6 +139,25 @@ describe("FormatUtil", () => {
             expect(formatPhone("12345678901")).toBe("(12) 34567-8901");
             expect(formatPhone("(12) 34567-8901")).toBe("(12) 34567-8901");
             expect(format("12345678901", FormattingType.Phone)).toBe("(12) 34567-8901");
+        });
+    });
+
+    describe("formatMoney", () => {
+
+        it("should be empty", () => {
+            expect(formatMoney("")).toBe("");
+            expect(formatMoney(null)).toBe("");
+            expect(formatMoney(undefined)).toBe("");
+        });
+
+        it("should format money", () => {
+            expect(removeWhiteSpace(formatMoney("1234"))).toBe(removeWhiteSpace(`R$ 1.234,00`));
+            expect(removeWhiteSpace(formatMoney("1234.111"))).toBe(removeWhiteSpace(`R$ 1.234,11`));
+            expect(removeWhiteSpace(formatMoney("1234,111"))).toBe(removeWhiteSpace(`R$ 1.234,11`));
+            expect(removeWhiteSpace(formatMoney("1234.195"))).toBe(removeWhiteSpace(`R$ 1.234,20`));
+            expect(removeWhiteSpace(formatMoney("1234.194"))).toBe(removeWhiteSpace(`R$ 1.234,19`));
+            expect(removeWhiteSpace(formatMoney("1234,195"))).toBe(removeWhiteSpace(`R$ 1.234,20`));
+            expect(removeWhiteSpace(formatMoney("1234,194"))).toBe(removeWhiteSpace(`R$ 1.234,19`));
         });
     });
 
