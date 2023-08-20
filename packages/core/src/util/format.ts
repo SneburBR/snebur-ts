@@ -34,6 +34,8 @@ export function format(value: string | number, type: FormattingType | string): s
     if (isNullOrEmpty(value?.toString())) return "";
 
     switch (type) {
+        case FormattingType.Bytes:
+            return formatBytes(value);
         case FormattingType.Cep:
             return formatCep(value);
         case FormattingType.Cnpj:
@@ -51,6 +53,32 @@ export function format(value: string | number, type: FormattingType | string): s
         default:
             throw new Error(`Formatting type ${type} not supported`);
     }
+}
+
+/**
+ * Formats a given value in bytes to a human-readable string representation with the appropriate unit (bytes, KB, MB, GB, TB).
+ * @param value - The value in bytes to be formatted.
+ * @returns A string representation of the value with the appropriate unit.
+ */
+export function formatBytes(value: string | number): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    const number = normalizeNumber(value);
+    const bytes = parseFloat(number);
+
+    if(bytes < 1024) return `${bytes.toFixed(0)} bytes`;
+    const kilobytes = bytes / 1024;
+
+    if(kilobytes < 1024) return `${kilobytes.toFixed(1)} KB`;
+
+    const megabytes = kilobytes / 1024;
+    if(megabytes < 1024) return `${megabytes.toFixed(1)} MB`;
+
+    const gigabytes = megabytes / 1024;
+    if (gigabytes < 1024) return `${gigabytes.toFixed(1)} GB`;
+
+    const terabytes = gigabytes / 1024;
+    return `${terabytes.toFixed(1)} TB`;
 }
 
 /**

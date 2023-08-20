@@ -1,11 +1,36 @@
 import { describe, expect, it } from "vitest";
 import {
-    FormattingType, format, formatCpf, formatCnpj, formatCpfCnpj,
+    FormattingType, format, formatBytes, formatCnpj, formatCpf, formatCpfCnpj,
     formatCep, formatMask, formatMoney, formatMoneyWithPositiveSign, formatPhone,
 } from "../../src/util/format";
 import { removeWhiteSpace } from "../../src/util/text";
 
 describe("FormatUtil", () => {
+
+
+
+    describe("formatBytes", () => {
+
+        it("should be empty", () => {
+            expect(formatBytes("")).toBe("");
+            expect(formatBytes(null)).toBe("");
+            expect(formatBytes(undefined)).toBe("");
+        });
+
+        it("should format bytes", () => {
+            expect(formatBytes(0)).toBe("0 bytes");
+            expect(formatBytes(1)).toBe("1 bytes");
+            expect(formatBytes(1023)).toBe("1023 bytes");
+            expect(formatBytes(1024)).toBe("1.0 KB");
+            expect(formatBytes(1025)).toBe("1.0 KB");
+            expect(formatBytes(1500)).toBe("1.5 KB");
+            expect(formatBytes(2060)).toBe("2.0 KB");
+            expect(formatBytes(1024 * 1024)).toBe("1.0 MB");
+            expect(formatBytes(1024 * 1024 * 1024)).toBe("1.0 GB");
+            expect(formatBytes(1024 * 1024 * 1024 * 1024)).toBe("1.0 TB");
+            expect(formatBytes(1024 * 1024 * 1024 * 1024 * 1024)).toBe("1024.0 TB");
+        });
+    });
 
     describe("formatCpf", () => {
 
