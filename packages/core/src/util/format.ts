@@ -1,3 +1,4 @@
+import { convertToDate } from "./convert";
 import { normalizeNumber, normalizeDate } from "./normalize";
 import { isNullOrEmpty, getOnlyNumbers, countOccurrences } from "./text";
 
@@ -144,18 +145,12 @@ export function formatCpfCnpj(value: string | number): string {
  */
 export function formatDate(value: string | number | Date): string {
 
-    if (value instanceof Date) {
-        return value.toLocaleDateString();
-    }
-
-    if (typeof value === "number") {
-        return new Date(value).toLocaleDateString();
-    }
-
     if (isNullOrEmpty(value?.toString())) return "";
+    if (typeof value === "number")
+        value = new Date(value);
 
-    const date = normalizeDate(value, true);
-    return formatMask(date, "##/##/####");
+    const dateString = normalizeDate(value, true);
+    return formatMask(dateString, "##/##/####");
 }
 
 /**
