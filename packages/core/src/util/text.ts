@@ -514,6 +514,7 @@ const symbols = "~^\\/|@#$&";
 const quotes = "\"'`";
 const specialSymbols = "°ºª§";
 const underscore = "_";
+const pointCommaSigns = "\\+\\.\\,\\-";
 
 /**
  * Options for including special characters in a regular expression pattern.
@@ -529,6 +530,7 @@ export enum SpecialCharsOptions {
     SpecialSymbols = 64,
     Underscore = 128,
     Dash = 256,
+    PointCommaSigns = 512,
 }
 
 function getRegexNotContains(only: RegexOnlyInternal, options: SpecialCharsOptions): RegExp {
@@ -557,6 +559,7 @@ function getRegexInternal(only: string, options: SpecialCharsOptions): string {
     if (options & SpecialCharsOptions.SpecialSymbols) regex += specialSymbols;
     if (options & SpecialCharsOptions.Underscore) regex += underscore;
     if (options & SpecialCharsOptions.Dash) regex += "-";
+    if (options & SpecialCharsOptions.PointCommaSigns) regex += pointCommaSigns;
     return regex;
 }
 
