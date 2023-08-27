@@ -146,7 +146,7 @@ export function getOnlyLettersAndNumbers(value: string, acceptOptions: SpecialCh
  * @param text The string to check.
  * @returns True if the string is null, undefined, or empty; otherwise, false.
  */
-export function isNullOrEmpty(text: string): boolean {
+export function isNullOrEmpty(text: string | null | undefined): boolean {
     return text == null || text === "";
 }
 
@@ -334,7 +334,7 @@ export function isKebabCase(text: string): boolean {
  * @returns The string with the special characters removed.
  */
 export function removeSpecialChars(value: string, options: SpecialCharsOptions = SpecialCharsOptions.None, replaceValue: string = ""): string {
-    if(value == null || value.length === 0) return "";
+    if (value == null || value.length === 0) return "";
     const regex = getRegexContains(RegexOnlyInternal.None, options);
     return value.replace(regex, replaceValue);
 }
@@ -381,7 +381,7 @@ export function removerAccentsAndSpecialChars(value: string, replaceValue: strin
 export function removeDiacritics(value: string, replaceValue: string = ""): string {
     if (value == null || value.length === 0) return "";
     return value.normalize("NFD").replace(/[\u0300-\u036f]/g, replaceValue);
-}   
+}
 
 /**
  * Removes all whitespace characters from a string.
@@ -499,7 +499,7 @@ export function specialConcat(parts: string[], separator: string = "", endSepara
     }
     return parts.join(separator);
 }
- 
+
 /* eslint-disable no-unused-vars */
 const Punctuation = ".,;:!?";
 const Operators = `\\+\\-\\*\\/\\%=`;
@@ -508,7 +508,7 @@ const Symbols = "~^\\/|@#$&";
 const Quotes = "\"'`";
 const SpecialSymbols = "°ºª§";
 const Underscore = "_";
-const PointCommaSigns = "\\+\\.\\,\\-";
+const PointCommaSigns = "\\+\\.\\,\\;\\-";
 
 /**
  * Options for including special characters in a regular expression pattern.
