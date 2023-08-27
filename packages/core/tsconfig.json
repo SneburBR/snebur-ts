@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
         "outDir": "build",
+        "rootDir": "src",
+        "declarationDir": "build/types",
         "target": "es2020",
         "module": "ESNext",
         "moduleResolution": "Node",
@@ -14,6 +16,7 @@
         "stripInternal": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
+        "declarationMap": true,
         "forceConsistentCasingInFileNames": true,
         "lib": [
             "ES2020"

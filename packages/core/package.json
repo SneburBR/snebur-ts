@@ -1,5 +1,15 @@
 {
   "name": "@snebur/core",
   "version": "0.0.0-LOCAL",
-  "description": ""
+  "description": "",
+  "exports": {
+    ".": {
+      "import": "./build/index.mjs",
+      "require": "./build/index.umd.js",
+      "types": "./build/index.d.ts"
+    }
+  },
+  "main": "./build/index.umd.js",
+  "module": "./build/index.mjs",
+  "types": "./build/index.d.ts"
 }
