@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd ./packages/core && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts && cd ../ui && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts ",
+    "build": "cd ./packages/core && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts && cd ../ui && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts && cd ../ui-demo && vite build && dts-bundle-generator src/main.ts -o ./build/main.d.ts  ",
+    "build-core": "cd ./packages/core && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts",
+    "build-ui": "cd ./packages/ui && vite build && dts-bundle-generator src/index.ts -o ./build/index.d.ts",
+    "build-demo": "cd ./packages/ui-demo && vite build && dts-bundle-generator src/main.ts -o ./build/main.d.ts",
     "test": "vitest"
   },
   "author": "Rubes Cordeiro",
