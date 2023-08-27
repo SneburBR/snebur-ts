@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
     FormattingType, format, formatBytes, formatCep, formatCnpj, formatCpf, formatCpfCnpj,
-    formatDate, formatMask, formatMoney, formatMoneyWithPositiveSign, formatPhone, 
-    formatZeroPad,
+    formatDate, formatMask, formatMoney, formatMoneyWithPositiveSign, formatPhone,
+    formatZeroPadding,
 } from "../../src/util/format";
 import { removeWhiteSpace } from "../../src/util/text";
 
@@ -161,7 +161,7 @@ describe("FormatUtil", () => {
             expect(format("12345678901", FormattingType.Cpf)).toBe("123.456.789-01");
         });
     });
- 
+
     describe("formatCpfCnpj", () => {
 
         it("should be empty", () => {
@@ -193,7 +193,7 @@ describe("FormatUtil", () => {
         });
     });
 
-   describe("formatDate", () => {
+    describe("formatDate", () => {
 
         it("should be empty", () => {
             expect(formatDate("")).toBe("");
@@ -206,7 +206,7 @@ describe("FormatUtil", () => {
             const currentDate = new Date();
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth() + 1;
-         
+
             expect(formatDate("2020-01-01")).toBe("01/01/2020");
             expect(formatDate("2020-01-01 00:00:00")).toBe("01/01/2020");
             expect(formatDate("2018-1-1")).toBe("01/01/2018");
@@ -220,13 +220,12 @@ describe("FormatUtil", () => {
             expect(formatDate("30/1-2018")).toBe("30/01/2018");
             expect(formatDate("30-1-2018")).toBe("30/01/2018");
             expect(formatDate("30.1.2018")).toBe("30/01/2018");
-            expect(formatDate("01")).toBe(`01/${formatZeroPad(month, 2)}/${year}`);
+            expect(formatDate("01")).toBe(`01/${formatZeroPadding(month, 2)}/${year}`);
 
             expect(formatDate(new Date(2018, 0, 1))).toBe("01/01/2018");
             expect(formatDate(new Date(2018, 0, 30))).toBe("30/01/2018");
         });
-   });
-
+    });
 
     describe("formatMask", () => {
 
@@ -242,10 +241,10 @@ describe("FormatUtil", () => {
 
         it("should format mask", () => {
             expect(formatMask("123", "##.##")).toBe("12.3");
-            expect(formatMask("1234", "##.(##.)-", true)).toBe("12.(34.)-");
-            expect(formatMask("1234", "##.##.", true)).toBe("12.34.");
-            expect(formatMask("1234", "+##.##-", true)).toBe("+12.34-");
-            expect(formatMask("123", "##.##-", true)).toBe("12.3");
+            expect(formatMask("1234", "##.(##.)-")).toBe("12.(34.)-");
+            expect(formatMask("1234", "##.##.")).toBe("12.34.");
+            expect(formatMask("1234", "+##.##-")).toBe("+12.34-");
+            expect(formatMask("123", "##.##-")).toBe("12.3");
             expect(formatMask("12345", "##.##")).toBe("12.34");
             expect(formatMask("123", "##-##")).toBe("12-3");
             expect(formatMask("1234", "##-##")).toBe("12-34");
