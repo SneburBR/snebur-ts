@@ -57,6 +57,29 @@ describe("FormatUtil", () => {
             expect(removeWhiteSpace(format("-1234,195", FormattingType.MoneyWithPositiveSign))).toBe(removeWhiteSpace(`-R$ 1.234,20`));
         });
 
+        it("should format date", () => {
+            expect(format(new Date(), FormattingType.Date)).toBe(formatDate(new Date()));
+        });
+
+        it("should format number", () => {
+            expect(format(1, "00")).toBe("01");
+            expect(format(10, "00")).toBe("10");
+            expect(format(100, "00")).toBe("100");
+            expect(format(100, "0000")).toBe("0100");
+
+            expect(format(1, "00.0")).toBe("01.0");
+            expect(format(1, "00,0")).toBe("01,0");
+            expect(format(1, "0,0")).toBe("1,0");
+            expect(format(1, "000.0")).toBe("001.0");
+            expect(format(1, "0.000.0")).toBe("0.001.0");
+            expect(format(1, "0.000,0")).toBe("0.001,0");
+            expect(format(1000, "0.000.000,00")).toBe("0.001.000,00");
+        });
+
+        it("should format text",()=>{
+            expect(format("0", "Valor {00}")).toBe("Valor 00");
+            expect(format("4236231870", "Telefone {Phone}")).toBe("Telefone (42) 3623-1870");
+        });
     });
 
     describe("formatBytes", () => {

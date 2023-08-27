@@ -1,7 +1,7 @@
-import { convertToDate } from "./convert";
 import { normalizeNumber, normalizeDate } from "./normalize";
-import { isNullOrEmpty, getOnlyNumbers, countOccurrences } from "./text";
+import { isNullOrEmpty, getOnlyNumbers, countOccurrences, SpecialCharsOptions, isNullOrWhiteSpace } from "./text";
 
+/* eslint-disable no-unused-vars */
 export enum FormattingType {
     Bytes = "bytes",
     Cep = "cep",
@@ -23,23 +23,35 @@ export enum FormattingType {
     Phone = "phone",
     Time = "time",
 }
+/* eslint-enable no-unused-vars */
 
 /**
  * Formats a string or number based on the specified formatting type.
  * @param value The value to format.
- * @param type The type of formatting to apply.
+ * @param formatting The type of formatting to apply.
  * @returns The formatted string.
  * @throws An error if the specified formatting type is not supported.
  */
-export function format(value: string | number | Date, type: FormattingType | string): string {
+export function format(value: string | number | Date, formatting: FormattingType | string): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
 
-    if (value instanceof Date) {
-        return formatDate(value);
-    }
+    if (value instanceof Date)
+        return formatDate(value, formatting);
 
-    switch (type) {
+    if (isFormattingNumber(formatting))
+        return formatNumber(value, formatting.toString());
+
+    if (isFormattingText(formatting))
+        return formatText(value, formatting.toString());
+
+    if (isFormattingMask(formatting))
+        return formatMask(value, formatting.toString());
+
+
+    switch (formatting) {
+        case FormattingType.None:
+            return value.toString();
         case FormattingType.Bytes:
             return formatBytes(value);
         case FormattingType.Cep:
@@ -59,7 +71,7 @@ export function format(value: string | number | Date, type: FormattingType | str
         case FormattingType.Phone:
             return formatPhone(value);
         default:
-            throw new Error(`Formatting type ${type} not supported`);
+            throw new Error(`Formatting type ${formatting} not supported`);
     }
 }
 
@@ -143,11 +155,14 @@ export function formatCpfCnpj(value: string | number): string {
  * @param value - The date value to format. Can be a string, number, or Date object.
  * @returns A string representation of the date value in the format "MM/DD/YYYY".
  */
-export function formatDate(value: string | number | Date): string {
+export function formatDate(value: string | number | Date, dateFormatting?: string): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
     if (typeof value === "number")
         value = new Date(value);
+
+    if (!isNullOrEmpty(dateFormatting) && dateFormatting !== FormattingType.Date)
+        throw new Error("Date formatting not implemented yet");
 
     const dateString = normalizeDate(value, true);
     return formatMask(dateString, "##/##/####");
@@ -159,7 +174,7 @@ export function formatDate(value: string | number | Date): string {
  * @param mask The mask to use for formatting.
  * @returns The formatted string.
  */
-export function formatMask(value: string | number, mask: string, isDebug: boolean = false) {
+export function formatMask(value: string | number, mask: string) {
 
     if (isNullOrEmpty(value?.toString())) return "";
     if (isNullOrEmpty(mask))
@@ -171,9 +186,6 @@ export function formatMask(value: string | number, mask: string, isDebug: boolea
     let result = "";
     let valueIndex = 0;
     const isIncomplete = numbers.length < countMaskMark;
-
-    if (isDebug)
-        console.log("isIncomplete", isIncomplete);
 
     for (let i = 0; i < mask.length; i++) {
 
@@ -218,6 +230,46 @@ export function formatMoneyWithPositiveSign(value: string | number, options?: In
 }
 
 /**
+ * Formats a number according to the given formatting string.
+ * @param value - The number to format.
+ * @param formatting - The formatting string to use.
+ * @returns The formatted number as a string.
+ */
+export function formatNumber(value: string | number, formatting: string): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    if (isNullOrEmpty(formatting))
+        return value.toString();
+
+
+    if (!isFormatiingNumberValid(formatting))
+        throw new Error(`Formatting string ${formatting} is invalid`);
+
+
+    const number = Number(normalizeNumber(value));
+    const decimalSeparator = getDecimalSeparator(formatting);
+
+    if (isNaN(number))
+        throw new Error(`Number value ${value} is invalid`);
+
+
+    if (decimalSeparator == null)
+        return formatZeroPadding(Math.round(number), formatting.length);
+
+    const decimalSeparatorIndex = formatting.lastIndexOf(decimalSeparator);
+
+    const integerPart = Math.floor(number).toString();
+    const decimalPart = Math.round((number - Math.floor(number)) * Math.pow(10, formatting.length - decimalSeparatorIndex - 1)).toString();
+
+    // const integerPart = numbers.substring(0, numbers.length - decimalSeparatorIndex);
+    // const decimalPart = numbers.substring(numbers.length - decimalSeparatorIndex);
+    const integerPartFormatted = formatIntegerPartInternal(integerPart, formatting.substring(0, decimalSeparatorIndex));
+    const decimalPartFormatted = formatZeroPadding(decimalPart, formatting.length - decimalSeparatorIndex - 1);
+
+    return `${integerPartFormatted}${decimalSeparator}${decimalPartFormatted}`;
+}
+ 
+/**
  * Formats a phone number string or number to a Brazilian phone number format.
  * @param value - The phone number to be formatted.
  * @returns The formatted phone number string.
@@ -234,6 +286,33 @@ export function formatPhone(value: string | number): string {
 }
 
 /**
+ * Formats the given value as a string using the specified formatting string.
+ * @param value The value to format.
+ * @param formatting The formatting string to use.
+ * @returns The formatted string.
+ */
+export function formatText(value: string | number, formatting: string): string {
+
+    if (isNullOrEmpty(value?.toString())) return "";
+    if (isNullOrEmpty(formatting))
+        return value.toString();
+
+    const r = regexFormattingText.exec(formatting);
+    if (r == null)
+        return value.toString();
+
+    const formatTextInternal = (match: string, p1: string) => {
+        console.log("formatTextInternal - MATCH" + match);
+        console.log(`formatTextInternal - PI Type ${p1 ?? "null"}`);
+         const type = isNullOrWhiteSpace(p1) ? FormattingType.None : p1.trim().toLowerCase();
+        return format(value, type);
+
+    };
+
+    return formatting.replace(regexFormattingText, formatTextInternal);
+}
+
+/**
  * Pads a string or number with leading zeros until it reaches the specified length.
  * If the input value is null, undefined, or an empty string, an empty string is returned.
  * If the specified length is less than or equal to zero, the input value is returned as a string.
@@ -241,7 +320,7 @@ export function formatPhone(value: string | number): string {
  * @param length - The desired length of the resulting string.
  * @returns A string with leading zeros, or an empty string if the input value is null, undefined, or an empty string.
  */
-export function formatZeroPad(value: string | number, length: number): string {
+export function formatZeroPadding(value: string | number, length: number): string {
 
     if (isNullOrEmpty(value?.toString())) return "";
     if (length <= 0) return value.toString();
@@ -252,13 +331,44 @@ export function formatZeroPad(value: string | number, length: number): string {
 
     return numbers.padStart(length, "0");
 }
-
-
+ 
 //#region Internal
+
+const regexFormattingText = /\{(\s*\w*\s*)\}/;
+
+function formatIntegerPartInternal(integerPart: string, formatting: string): string {
+
+    if (isNullOrEmpty(integerPart)) return "";
+    if (isNullOrEmpty(formatting))
+        return integerPart;
+
+    const zeroCount = countOccurrences(formatting, "0");
+    const integerPartFormatted = formatZeroPadding(integerPart, zeroCount);
+    const integerPartFormattedReversed = integerPartFormatted.split("").reverse().join("");
+    const formattingReversed = formatting.split("").reverse().join("");
+
+    let result = "";
+    let integerPartIndex = 0;
+
+    for (let i = 0; i < formattingReversed.length; i++) {
+
+        if (integerPartIndex >= integerPartFormattedReversed.length)
+            break;
+
+        if (formattingReversed[i] === "0") {
+            result += integerPartFormattedReversed[integerPartIndex];
+            integerPartIndex++;
+        }
+        else {
+            result += formattingReversed[i];
+        }
+    }
+    return result.split("").reverse().join("");
+}
 
 function formatMoneyInternal(value: string | number, isAddPositiveSign: boolean, options?: Intl.NumberFormatOptions): string {
 
-    if (isNullOrEmpty(value?.toString())) return "";
+    if (isNullOrWhiteSpace(value?.toString())) return "";
 
     const number = Number(normalizeNumber(value));
     if (isNaN(number))
@@ -278,6 +388,32 @@ function formatMoneyInternal(value: string | number, isAddPositiveSign: boolean,
         return `+${result}`;
 
     return result;
+}
+
+function getDecimalSeparator(formatting: string): string | null {
+    const lastIndexComma = formatting.lastIndexOf(",");
+    const lastIndexPoint = formatting.lastIndexOf(".");
+
+    if (lastIndexComma === -1 && lastIndexPoint === -1)
+        return null;
+
+    return lastIndexComma > lastIndexPoint ? "," : ".";
+}
+
+function isFormattingMask(value: string): boolean {
+    return value.includes("#");
+}
+
+function isFormattingNumber(value: string): boolean {
+    return /^[0\\.\\,]+$/.test(value);
+}
+
+function isFormatiingNumberValid(formatting: string): boolean {
+    return /[^0.,]+/.test(formatting) === false;
+}
+
+function isFormattingText(value: string): boolean {
+    return regexFormattingText.test(value);
 }
 
 //#endregion
